@@ -264,7 +264,7 @@
      <string/>
     </property>
     <property name="pixmap">
-     <pixmap>../../../../../Downloads/background.jpg</pixmap>
+     <pixmap>../assets/background.jpg</pixmap>
     </property>
     <property name="scaledContents">
      <bool>true</bool>

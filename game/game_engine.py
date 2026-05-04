@@ -9,6 +9,9 @@ class GameEngine:
         self.current_player_index = 0
 
     def setup_game(self, player1_name="Player 1", player2_name="Player 2"):
+        self.players.clear()
+        self.current_player_index = 0
+
         self.game_map.create_default_map()
 
         player1 = Player(1, player1_name, "Red")

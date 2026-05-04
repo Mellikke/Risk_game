@@ -86,7 +86,7 @@
      <string/>
     </property>
     <property name="pixmap">
-     <pixmap>../../../../../Downloads/waiting_room_background.jpg</pixmap>
+     <pixmap>../assets/waiting_room_background.jpg</pixmap>
     </property>
    </widget>
    <widget class="QLabel" name="statusLabel">

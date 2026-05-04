@@ -16,5 +16,7 @@ class Territory:
         self.armies += count
 
     def remove_armies(self, count):
-        if count <= self.armies:
-            self.armies -= count
+        if count <= 0:
+            return
+
+        self.armies = max(0, self.armies - count)
