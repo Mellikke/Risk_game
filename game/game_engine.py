@@ -8,11 +8,11 @@ class GameEngine:
         self.game_map = GameMap()
         self.current_player_index = 0
 
-    def setup_game(self):
+    def setup_game(self, player1_name="Player 1", player2_name="Player 2"):
         self.game_map.create_default_map()
 
-        player1 = Player(1, "Player 1", "Red")
-        player2 = Player(2, "Player 2", "Blue")
+        player1 = Player(1, player1_name, "Red")
+        player2 = Player(2, player2_name, "Blue")
 
         self.players.append(player1)
         self.players.append(player2)

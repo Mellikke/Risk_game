@@ -40,7 +40,7 @@ class StartWindow(QMainWindow):
             if response.startswith("CONNECTED|"):
                 player_role = response.split("|")[1]
 
-            self.waiting_window = WaitingWindow(player_name, player_role)
+            self.waiting_window = WaitingWindow(player_name, player_role, self.network_client)
             self.waiting_window.show()
             self.close()
 

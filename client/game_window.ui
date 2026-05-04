@@ -1,0 +1,443 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>1200</width>
+    <height>850</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>RISK: Global Tactics</string>
+  </property>
+  <property name="styleSheet">
+   <string notr="true">
+QMainWindow {
+    background-color: #0a0b0a;
+}
+
+QWidget#centralwidget {
+    background-color: qlineargradient(spread:pad, x1:0.5, y1:0, x2:0.5, y2:1, stop:0 #1a1d1a, stop:1 #050505);
+}
+
+QGroupBox {
+    border: 1px solid #3a413a;
+    border-radius: 4px;
+    margin-top: 20px;
+    background-color: rgba(20, 25, 20, 220);
+    color: #c5a059;
+    font-weight: bold;
+    font-family: "Segoe UI Semibold";
+}
+
+QGroupBox::title {
+    subcontrol-origin: margin;
+    left: 10px;
+    padding: 0 5px;
+}
+
+QPushButton {
+    background-color: #252a25;
+    border: 1px solid #454d45;
+    color: #e0e0e0;
+    border-radius: 3px;
+    padding: 8px;
+    font-weight: bold;
+}
+
+QPushButton:hover {
+    background-color: #353d35;
+    border: 1px solid #c5a059;
+}
+
+QPushButton:pressed {
+    background-color: #151815;
+}
+
+QLabel {
+    color: #e0e0e0;
+}
+
+QLabel#resultLabel {
+    background-color: #0f120f;
+    border: 1px solid #2a302a;
+    padding: 10px;
+    color: #8da38d;
+    font-family: "Consolas";
+}
+   </string>
+  </property>
+
+  <widget class="QWidget" name="centralwidget">
+   <layout class="QVBoxLayout" name="mainLayout">
+
+    <item>
+     <widget class="QFrame" name="headerFrame">
+      <property name="minimumSize">
+       <size>
+        <width>0</width>
+        <height>80</height>
+       </size>
+      </property>
+      <layout class="QVBoxLayout" name="headerContent">
+       <item>
+        <widget class="QLabel" name="titleLabel">
+         <property name="styleSheet">
+          <string notr="true">font-size: 32px; font-weight: bold; color: #c5a059; letter-spacing: 10px;</string>
+         </property>
+         <property name="text">
+          <string>RISK GAME</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignCenter</set>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="playerInfoLabel">
+         <property name="styleSheet">
+          <string notr="true">font-size: 14px; color: #ff4444; font-style: italic;</string>
+         </property>
+         <property name="text">
+          <string>Commander: Player Info</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignCenter</set>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+    </item>
+
+    <item>
+     <layout class="QHBoxLayout" name="gameAreaLayout">
+
+      <item>
+       <widget class="QGroupBox" name="statusGroupBox">
+        <property name="minimumSize">
+         <size>
+          <width>200</width>
+          <height>0</height>
+         </size>
+        </property>
+        <property name="title">
+         <string>TACTICAL STATUS</string>
+        </property>
+        <layout class="QVBoxLayout" name="statusLayout">
+         <item>
+          <widget class="QLabel" name="currentPlayerLabel">
+           <property name="text">
+            <string>Current: Player 1</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLabel" name="phaseLabel">
+           <property name="text">
+            <string>Phase: ATTACK</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLabel" name="reinforcementLabel">
+           <property name="styleSheet">
+            <string notr="true">color: #00ff00;</string>
+           </property>
+           <property name="text">
+            <string>Reinforcements: +4</string>
+           </property>
+          </widget>
+         </item>
+
+         <item>
+          <spacer name="verticalSpacer">
+           <property name="orientation">
+            <enum>Qt::Vertical</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>20</width>
+             <height>40</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+
+         <item>
+          <widget class="QFrame" name="legendFrame">
+           <layout class="QVBoxLayout" name="legendLayout">
+            <item>
+             <widget class="QLabel" name="p1LegendLabel">
+              <property name="text">
+               <string>● P1: Red Division</string>
+              </property>
+              <property name="styleSheet">
+               <string notr="true">color: #ff4444;</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QLabel" name="p2LegendLabel">
+              <property name="text">
+               <string>● P2: Blue Division</string>
+              </property>
+              <property name="styleSheet">
+               <string notr="true">color: #4444ff;</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+      </item>
+
+      <item>
+       <widget class="QFrame" name="mapFrame">
+        <property name="minimumSize">
+         <size>
+          <width>700</width>
+          <height>500</height>
+         </size>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">
+QFrame#mapFrame {
+    background-color: #1b241b;
+    border: 2px solid #c5a059;
+}
+         </string>
+        </property>
+
+        <widget class="QPushButton" name="trakyaButton">
+         <property name="geometry">
+          <rect>
+           <x>360</x>
+           <y>180</y>
+           <width>70</width>
+           <height>55</height>
+          </rect>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">background-color: rgba(139, 0, 0, 180); border: 2px solid #ff4444; color: white; border-radius: 15px;</string>
+         </property>
+         <property name="text">
+          <string>Trakya
+3</string>
+         </property>
+        </widget>
+
+        <widget class="QPushButton" name="anadoluButton">
+         <property name="geometry">
+          <rect>
+           <x>430</x>
+           <y>230</y>
+           <width>80</width>
+           <height>60</height>
+          </rect>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">background-color: rgba(139, 0, 0, 180); border: 2px solid #ff4444; color: white; border-radius: 15px;</string>
+         </property>
+         <property name="text">
+          <string>Anadolu
+12</string>
+         </property>
+        </widget>
+
+        <widget class="QPushButton" name="kafkasyaButton">
+         <property name="geometry">
+          <rect>
+           <x>540</x>
+           <y>180</y>
+           <width>90</width>
+           <height>55</height>
+          </rect>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">background-color: rgba(0, 50, 139, 180); border: 2px solid #4444ff; color: white; border-radius: 15px;</string>
+         </property>
+         <property name="text">
+          <string>Kafkasya
+5</string>
+         </property>
+        </widget>
+
+        <widget class="QPushButton" name="balkanlarButton">
+         <property name="geometry">
+          <rect>
+           <x>300</x>
+           <y>250</y>
+           <width>90</width>
+           <height>55</height>
+          </rect>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">background-color: rgba(0, 50, 139, 180); border: 2px solid #4444ff; color: white; border-radius: 15px;</string>
+         </property>
+         <property name="text">
+          <string>Balkanlar
+4</string>
+         </property>
+        </widget>
+
+        <widget class="QPushButton" name="ortaDoguButton">
+         <property name="geometry">
+          <rect>
+           <x>500</x>
+           <y>330</y>
+           <width>95</width>
+           <height>55</height>
+          </rect>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">background-color: rgba(139, 0, 0, 180); border: 2px solid #ff4444; color: white; border-radius: 15px;</string>
+         </property>
+         <property name="text">
+          <string>Orta Dogu
+7</string>
+         </property>
+        </widget>
+
+        <widget class="QPushButton" name="kuzeyAfrikaButton">
+         <property name="geometry">
+          <rect>
+           <x>310</x>
+           <y>390</y>
+           <width>120</width>
+           <height>55</height>
+          </rect>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">background-color: rgba(0, 50, 139, 180); border: 2px solid #4444ff; color: white; border-radius: 15px;</string>
+         </property>
+         <property name="text">
+          <string>Kuzey Afrika
+6</string>
+         </property>
+        </widget>
+
+       </widget>
+      </item>
+
+      <item>
+       <widget class="QGroupBox" name="attackGroupBox">
+        <property name="minimumSize">
+         <size>
+          <width>220</width>
+          <height>0</height>
+         </size>
+        </property>
+        <property name="title">
+         <string>COMMAND CENTER</string>
+        </property>
+        <layout class="QVBoxLayout" name="attackLayout">
+         <item>
+          <widget class="QLabel" name="attackerLabel">
+           <property name="text">
+            <string>FROM: None</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLabel" name="defenderLabel">
+           <property name="text">
+            <string>TARGET: None</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QListWidget" name="territoryList">
+           <property name="styleSheet">
+            <string notr="true">background: transparent; border: 1px solid #333; color: #e0e0e0;</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QFrame" name="diceFrame">
+           <property name="minimumSize">
+            <size>
+             <width>0</width>
+             <height>60</height>
+            </size>
+           </property>
+           <property name="styleSheet">
+            <string notr="true">background-color: #111511; border: 1px solid #2a302a;</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+      </item>
+
+     </layout>
+    </item>
+
+    <item>
+     <layout class="QHBoxLayout" name="bottomLayout">
+      <item>
+       <widget class="QLabel" name="resultLabel">
+        <property name="text">
+         <string>[SYSTEM]: Waiting for action...</string>
+        </property>
+        <property name="minimumSize">
+         <size>
+          <width>0</width>
+          <height>80</height>
+         </size>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <layout class="QVBoxLayout" name="buttonLayout">
+        <item>
+         <widget class="QPushButton" name="attackButton">
+          <property name="minimumSize">
+           <size>
+            <width>180</width>
+            <height>45</height>
+           </size>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">background-color: #631212; border: 1px solid #ff4444;</string>
+          </property>
+          <property name="text">
+           <string>SALDIR</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="nextTurnButton">
+          <property name="minimumSize">
+           <size>
+            <width>180</width>
+            <height>45</height>
+           </size>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">background-color: #124012; border: 1px solid #44ff44;</string>
+          </property>
+          <property name="text">
+           <string>TURU BİTİR</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </item>
+     </layout>
+    </item>
+
+   </layout>
+  </widget>
+
+  <widget class="QMenuBar" name="menubar"/>
+  <widget class="QStatusBar" name="statusbar"/>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

@@ -5,7 +5,7 @@ from PyQt6.QtWidgets import QApplication, QMainWindow
 from PyQt6.QtCore import pyqtSignal
 
 from ui_waiting_window import Ui_MainWindow
-from app import RiskGameWindow
+from app import game_window
 
 
 class WaitingWindow(QMainWindow):
@@ -21,7 +21,7 @@ class WaitingWindow(QMainWindow):
         self.player_role = player_role
         self.network_client = network_client
 
-        self.ui.playerInfoLabel.setText(f"Oyuncu: {player_name} ({player_role})")
+        self.ui.player_info_layer.setText(f"Oyuncu: {player_name} ({player_role})")
         self.ui.statusLabel.setText("Rakip oyuncunun bağlanması bekleniyor...")
 
         self.server_message_signal.connect(self.handle_server_message)
@@ -50,7 +50,7 @@ class WaitingWindow(QMainWindow):
         if message.startswith("GAME_START"):
             self.ui.statusLabel.setText("İki oyuncu bağlandı. Oyun başlıyor...")
 
-            self.game_window = RiskGameWindow(
+            self.game_window = game_window(
                 player_name=self.player_name,
                 player_role=self.player_role,
                 network_client=self.network_client
@@ -58,7 +58,6 @@ class WaitingWindow(QMainWindow):
 
             self.game_window.show()
             self.close()
-
 
 def run_waiting_app():
     app = QApplication(sys.argv)

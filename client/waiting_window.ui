@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>800</width>
-    <height>600</height>
+    <height>640</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -34,7 +34,7 @@
      <string>RİSK OYUNU</string>
     </property>
    </widget>
-   <widget class="QLabel" name="label_2">
+   <widget class="QLabel" name="playerInfoLabel">
     <property name="geometry">
      <rect>
       <x>60</x>
@@ -89,7 +89,7 @@
      <pixmap>../../../../../Downloads/waiting_room_background.jpg</pixmap>
     </property>
    </widget>
-   <widget class="QLabel" name="label_4">
+   <widget class="QLabel" name="statusLabel">
     <property name="geometry">
      <rect>
       <x>220</x>
@@ -111,9 +111,9 @@
    </widget>
    <zorder>label_3</zorder>
    <zorder>label</zorder>
-   <zorder>label_2</zorder>
+   <zorder>playerInfoLabel</zorder>
    <zorder>player_info_layer</zorder>
-   <zorder>label_4</zorder>
+   <zorder>statusLabel</zorder>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
