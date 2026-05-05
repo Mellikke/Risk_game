@@ -38,7 +38,7 @@ class WorldMapWidget(QtWidgets.QWidget):
         "army_pos": QtCore.QPointF(88, 78),
     },
     {
-        "name": "Yukon",
+        "name": "Kuzeybatı Toprakları",
         "owner": "Player 2",
         "armies": 3,
         "color": blue,
@@ -52,7 +52,7 @@ class WorldMapWidget(QtWidgets.QWidget):
         "army_pos": QtCore.QPointF(222, 78),
     },
     {
-        "name": "Batı Kanada",
+        "name": "Alberta",
         "owner": "Player 2",
         "armies": 3,
         "color": blue,
@@ -65,7 +65,7 @@ class WorldMapWidget(QtWidgets.QWidget):
         "army_pos": QtCore.QPointF(115, 158),
     },
     {
-        "name": "Doğu Kanada",
+        "name": "Ontario",
         "owner": "Player 1",
         "armies": 3,
         "color": red,
@@ -78,7 +78,7 @@ class WorldMapWidget(QtWidgets.QWidget):
         "army_pos": QtCore.QPointF(255, 172),
     },
     {
-        "name": "Batı Amerika",
+        "name": "Batı ABD",
         "owner": "Player 2",
         "armies": 3,
         "color": blue,
@@ -91,7 +91,7 @@ class WorldMapWidget(QtWidgets.QWidget):
         "army_pos": QtCore.QPointF(152, 250),
     },
     {
-        "name": "Doğu Amerika",
+        "name": "Doğu ABD",
         "owner": "Player 1",
         "armies": 3,
         "color": red,
@@ -186,7 +186,7 @@ class WorldMapWidget(QtWidgets.QWidget):
         "army_pos": QtCore.QPointF(458, 72),
     },
     {
-        "name": "Britanya",
+        "name": "Büyük Britanya",
         "owner": "Player 1",
         "armies": 3,
         "color": red,
@@ -225,7 +225,7 @@ class WorldMapWidget(QtWidgets.QWidget):
         "army_pos": QtCore.QPointF(528, 240),
     },
     {
-        "name": "Orta Avrupa",
+        "name": "Kuzey Avrupa",
         "owner": "Player 2",
         "armies": 3,
         "color": blue,
@@ -238,7 +238,7 @@ class WorldMapWidget(QtWidgets.QWidget):
         "army_pos": QtCore.QPointF(620, 190),
     },
     {
-        "name": "Balkanlar",
+        "name": "Güney Avrupa",
         "owner": "Player 1",
         "armies": 3,
         "color": red,
@@ -251,7 +251,7 @@ class WorldMapWidget(QtWidgets.QWidget):
         "army_pos": QtCore.QPointF(675, 292),
     },
     {
-        "name": "Trakya",
+        "name": "Ukrayna",
         "owner": "Player 2",
         "armies": 3,
         "color": blue,
@@ -292,7 +292,7 @@ class WorldMapWidget(QtWidgets.QWidget):
         "army_pos": QtCore.QPointF(685, 388),
     },
     {
-        "name": "Orta Afrika",
+        "name": "Kongo",
         "owner": "Player 1",
         "armies": 3,
         "color": red,
@@ -333,7 +333,7 @@ class WorldMapWidget(QtWidgets.QWidget):
 
     # ASIA
     {
-        "name": "Kafkasya",
+        "name": "Afganistan",
         "owner": "Player 2",
         "armies": 3,
         "color": blue,
@@ -372,7 +372,7 @@ class WorldMapWidget(QtWidgets.QWidget):
         "army_pos": QtCore.QPointF(1075, 210),
     },
     {
-        "name": "Orta Asya",
+        "name": "Moğolistan",
         "owner": "Player 1",
         "armies": 3,
         "color": red,
@@ -411,7 +411,7 @@ class WorldMapWidget(QtWidgets.QWidget):
         "army_pos": QtCore.QPointF(905, 438),
     },
     {
-        "name": "Güneydoğu Asya",
+        "name": "Siam",
         "owner": "Player 2",
         "armies": 3,
         "color": blue,
@@ -489,6 +489,99 @@ class WorldMapWidget(QtWidgets.QWidget):
         ],
         "label_pos": QtCore.QPointF(1210, 835),
         "army_pos": QtCore.QPointF(1205, 795),
+    },
+
+        # EXTRA CLASSIC RISK TERRITORIES - added to reach 42
+    {
+        "name": "Grönland",
+        "owner": "Player 1",
+        "armies": 3,
+        "color": red,
+        "points": [
+            QtCore.QPointF(300, 35), QtCore.QPointF(390, 20),
+            QtCore.QPointF(455, 55), QtCore.QPointF(430, 125),
+            QtCore.QPointF(340, 130), QtCore.QPointF(285, 85),
+        ],
+        "label_pos": QtCore.QPointF(370, 82),
+        "army_pos": QtCore.QPointF(365, 48),
+    },
+    {
+        "name": "Quebec",
+        "owner": "Player 2",
+        "armies": 3,
+        "color": blue,
+        "points": [
+            QtCore.QPointF(315, 150), QtCore.QPointF(370, 165),
+            QtCore.QPointF(390, 230), QtCore.QPointF(335, 250),
+            QtCore.QPointF(285, 150),
+        ],
+        "label_pos": QtCore.QPointF(340, 205),
+        "army_pos": QtCore.QPointF(340, 172),
+    },
+    {
+        "name": "Doğu Afrika",
+        "owner": "Player 2",
+        "armies": 3,
+        "color": blue,
+        "points": [
+            QtCore.QPointF(700, 480), QtCore.QPointF(760, 445),
+            QtCore.QPointF(835, 465), QtCore.QPointF(820, 560),
+            QtCore.QPointF(725, 585), QtCore.QPointF(660, 565),
+        ],
+        "label_pos": QtCore.QPointF(750, 520),
+        "army_pos": QtCore.QPointF(745, 482),
+    },
+    {
+        "name": "Madagaskar",
+        "owner": "Player 1",
+        "armies": 3,
+        "color": red,
+        "points": [
+            QtCore.QPointF(775, 610), QtCore.QPointF(835, 630),
+            QtCore.QPointF(850, 730), QtCore.QPointF(800, 785),
+            QtCore.QPointF(760, 705),
+        ],
+        "label_pos": QtCore.QPointF(805, 690),
+        "army_pos": QtCore.QPointF(802, 650),
+    },
+    {
+        "name": "Yakutsk",
+        "owner": "Player 1",
+        "armies": 3,
+        "color": red,
+        "points": [
+            QtCore.QPointF(1105, 90), QtCore.QPointF(1220, 95),
+            QtCore.QPointF(1265, 165), QtCore.QPointF(1180, 235),
+            QtCore.QPointF(1105, 170),
+        ],
+        "label_pos": QtCore.QPointF(1180, 155),
+        "army_pos": QtCore.QPointF(1175, 115),
+    },
+    {
+        "name": "Kamçatka",
+        "owner": "Player 2",
+        "armies": 3,
+        "color": blue,
+        "points": [
+            QtCore.QPointF(1245, 150), QtCore.QPointF(1310, 170),
+            QtCore.QPointF(1300, 300), QtCore.QPointF(1245, 365),
+            QtCore.QPointF(1230, 350), QtCore.QPointF(1245, 260),
+        ],
+        "label_pos": QtCore.QPointF(1270, 245),
+        "army_pos": QtCore.QPointF(1268, 205),
+    },
+    {
+        "name": "Irkutsk",
+        "owner": "Player 1",
+        "armies": 3,
+        "color": red,
+        "points": [
+            QtCore.QPointF(1040, 230), QtCore.QPointF(1105, 170),
+            QtCore.QPointF(1180, 235), QtCore.QPointF(1140, 330),
+            QtCore.QPointF(1015, 305),
+        ],
+        "label_pos": QtCore.QPointF(1095, 270),
+        "army_pos": QtCore.QPointF(1090, 235),
     },
 ]
 
@@ -575,11 +668,11 @@ class WorldMapWidget(QtWidgets.QWidget):
             ("Grönland", "İzlanda"),
             ("Brezilya", "Kuzey Afrika"),
             ("Güney Avrupa", "Mısır"),
-            ("Orta Dogu", "Doğu Afrika"),
+            ("Mısır", "Orta Dogu"),
+            ("Orta Dogu", "Hindistan"),
             ("Siam", "Endonezya"),
             ("Endonezya", "Yeni Gine"),
             ("Yeni Gine", "Doğu Avustralya"),
-            ("Batı Avustralya", "Doğu Avustralya"),
         ]
 
         glow_pen = QtGui.QPen(QtGui.QColor(255, 255, 255, 70), 7)
@@ -663,64 +756,72 @@ class WorldMapWidget(QtWidgets.QWidget):
             army_pos = territory["army_pos"]
             label_pos = territory["label_pos"]
 
-            # Aynı rengin koyu/açık tonları
             outer_color = QtGui.QColor(fill_color).darker(145)
             inner_color = QtGui.QColor(fill_color)
-            highlight_color = QtGui.QColor(fill_color).lighter(135)
+            highlight_color = QtGui.QColor(fill_color).lighter(140)
 
-            # Dış gölge
+            # --- Asker sayısı dairesi ---
             painter.setPen(QtCore.Qt.PenStyle.NoPen)
-            painter.setBrush(QtGui.QColor(0, 0, 0, 95))
+            painter.setBrush(QtGui.QColor(0, 0, 0, 90))
             painter.drawEllipse(
                 QtCore.QPointF(army_pos.x() + 2.5, army_pos.y() + 3),
                 22, 22
             )
 
-            # Dış halka
-            painter.setPen(QtGui.QPen(QtGui.QColor(255, 255, 255, 150), 2.2))
+            painter.setPen(QtGui.QPen(QtGui.QColor(255, 255, 255, 120), 2))
             painter.setBrush(outer_color)
             painter.drawEllipse(army_pos, 21, 21)
 
-            # İç disk
-            painter.setPen(QtGui.QPen(QtGui.QColor(255, 255, 255, 80), 1.4))
-            painter.setBrush(inner_color)
+            grad = QtGui.QRadialGradient(
+                QtCore.QPointF(army_pos.x() - 5, army_pos.y() - 6), 28
+            )
+            grad.setColorAt(0.0, highlight_color)
+            grad.setColorAt(0.55, inner_color)
+            grad.setColorAt(1.0, outer_color)
+
+            painter.setPen(QtGui.QPen(QtGui.QColor(255, 255, 255, 70), 1.2))
+            painter.setBrush(QtGui.QBrush(grad))
             painter.drawEllipse(army_pos, 17, 17)
 
-            # Üst parlama (kabartma hissi)
-            painter.setPen(QtCore.Qt.PenStyle.NoPen)
-            painter.setBrush(QtGui.QColor(highlight_color.red(), highlight_color.green(), highlight_color.blue(), 120))
-            painter.drawEllipse(
-                QtCore.QPointF(army_pos.x() - 4, army_pos.y() - 5),
-                8, 6
-            )
-
-            # Asker sayısı
-            army_font = QtGui.QFont("Segoe UI", 11)
+            # Asker sayısı yazısı
+            army_font = QtGui.QFont("Segoe UI", 10)
             army_font.setBold(True)
             painter.setFont(army_font)
-            painter.setPen(QtGui.QColor("white"))
+
+            painter.setPen(QtGui.QColor(0, 0, 0, 170))
             painter.drawText(
-                QtCore.QRectF(army_pos.x() - 18, army_pos.y() - 18, 36, 36),
+                QtCore.QRectF(army_pos.x() - 16, army_pos.y() - 15, 34, 34),
                 QtCore.Qt.AlignmentFlag.AlignCenter,
                 str(armies)
             )
 
-            # Sadece bölge adı
-            label_rect = QtCore.QRectF(label_pos.x() - 52, label_pos.y() - 12, 104, 24)
-
-            painter.setBrush(QtGui.QColor(0, 0, 0, 95))
-            painter.setPen(QtGui.QPen(QtGui.QColor(255, 255, 255, 45), 1))
-            painter.drawRoundedRect(label_rect, 7, 7)
-
-            label_font = QtGui.QFont("Segoe UI Semibold", 6)
-            painter.setFont(label_font)
             painter.setPen(QtGui.QColor("white"))
             painter.drawText(
-                label_rect,
+                QtCore.QRectF(army_pos.x() - 17, army_pos.y() - 17, 34, 34),
+                QtCore.Qt.AlignmentFlag.AlignCenter,
+                str(armies)
+            )
+
+            # --- Bölge adı ---
+            # Kutucuk yok, sadece gölgeli yazı
+            label_font = QtGui.QFont("Segoe UI Semibold", 8)
+            painter.setFont(label_font)
+
+            text_rect = QtCore.QRectF(label_pos.x() - 50, label_pos.y() - 10, 100, 22)
+
+            painter.setPen(QtGui.QColor(0, 0, 0, 180))
+            painter.drawText(
+                text_rect.translated(1.2, 1.2),
                 QtCore.Qt.AlignmentFlag.AlignCenter,
                 name
             )
-            
+
+            painter.setPen(QtGui.QColor("white"))
+            painter.drawText(
+                text_rect,
+                QtCore.Qt.AlignmentFlag.AlignCenter,
+                name
+            )
 
     def mousePressEvent(self, event):
         world_pos = self._screen_to_world(event.position())

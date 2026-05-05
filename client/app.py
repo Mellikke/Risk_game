@@ -113,7 +113,7 @@ class RiskGameWindow(QMainWindow):
             owner_short = "P1" if territory.owner.name == "Player 1" else "P2"
 
             self.ui.territoryList.addItem(
-                f"{display_name}  |  {owner_short}  |  {territory.armies} asker"
+                f"{display_name}  |  {owner_short}  |  {territory.armies} "
             )
 
             self.update_hidden_button(territory)
