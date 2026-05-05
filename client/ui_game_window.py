@@ -13,8 +13,8 @@ class WorldMapWidget(QtWidgets.QWidget):
         super().__init__(parent)
 
         self.setMinimumSize(820, 520)
-        self.base_width = 1000
-        self.base_height = 540
+        self.base_width = 1320
+        self.base_height = 940
         self.selected_name = None
 
         blue = QtGui.QColor("#768dca")
@@ -23,220 +23,474 @@ class WorldMapWidget(QtWidgets.QWidget):
         # SADECE TEK HARİTA SETİ VAR.
         # Farklı renkli eski ikinci harita tamamen kaldırıldı.
         self.territories = [
-            {
-                "name": "Alaska",
-                "owner": "Player 2",
-                "armies": 2,
-                "color": blue,
-                "points": [
-                    QtCore.QPointF(35, 95),
-                    QtCore.QPointF(105, 60),
-                    QtCore.QPointF(175, 88),
-                    QtCore.QPointF(155, 150),
-                    QtCore.QPointF(75, 165),
-                    QtCore.QPointF(30, 130),
-                ],
-                "label_pos": QtCore.QPointF(102, 122),
-                "army_pos": QtCore.QPointF(90, 92),
-            },
-            {
-                "name": "Kanada",
-                "owner": "Player 2",
-                "armies": 3,
-                "color": blue,
-                "points": [
-                    QtCore.QPointF(155, 72),
-                    QtCore.QPointF(285, 55),
-                    QtCore.QPointF(370, 92),
-                    QtCore.QPointF(340, 165),
-                    QtCore.QPointF(225, 182),
-                    QtCore.QPointF(155, 150),
-                    QtCore.QPointF(175, 88),
-                ],
-                "label_pos": QtCore.QPointF(250, 120),
-                "army_pos": QtCore.QPointF(240, 92),
-            },
-            {
-                "name": "Doğu Amerika",
-                "owner": "Player 2",
-                "armies": 4,
-                "color": blue,
-                "points": [
-                    QtCore.QPointF(75, 165),
-                    QtCore.QPointF(155, 150),
-                    QtCore.QPointF(225, 182),
-                    QtCore.QPointF(340, 165),
-                    QtCore.QPointF(365, 245),
-                    QtCore.QPointF(315, 322),
-                    QtCore.QPointF(200, 320),
-                    QtCore.QPointF(118, 250),
-                ],
-                "label_pos": QtCore.QPointF(225, 242),
-                "army_pos": QtCore.QPointF(210, 204),
-            },
-            {
-                "name": "Güney Amerika",
-                "owner": "Player 1",
-                "armies": 2,
-                "color": red,
-                "points": [
-                    QtCore.QPointF(205, 320),
-                    QtCore.QPointF(315, 322),
-                    QtCore.QPointF(365, 430),
-                    QtCore.QPointF(315, 515),
-                    QtCore.QPointF(225, 500),
-                    QtCore.QPointF(188, 405),
-                ],
-                "label_pos": QtCore.QPointF(275, 430),
-                "army_pos": QtCore.QPointF(265, 388),
-            },
-            {
-                "name": "Batı Avrupa",
-                "owner": "Player 2",
-                "armies": 2,
-                "color": blue,
-                "points": [
-                    QtCore.QPointF(430, 130),
-                    QtCore.QPointF(505, 108),
-                    QtCore.QPointF(555, 148),
-                    QtCore.QPointF(535, 220),
-                    QtCore.QPointF(462, 235),
-                    QtCore.QPointF(405, 180),
-                ],
-                "label_pos": QtCore.QPointF(480, 178),
-                "army_pos": QtCore.QPointF(472, 145),
-            },
-            {
-                "name": "Balkanlar",
-                "owner": "Player 2",
-                "armies": 3,
-                "color": blue,
-                "points": [
-                    QtCore.QPointF(530, 118),
-                    QtCore.QPointF(605, 108),
-                    QtCore.QPointF(660, 138),
-                    QtCore.QPointF(648, 205),
-                    QtCore.QPointF(570, 216),
-                    QtCore.QPointF(532, 172),
-                ],
-                "label_pos": QtCore.QPointF(590, 168),
-                "army_pos": QtCore.QPointF(590, 135),
-            },
-            {
-                "name": "Trakya",
-                "owner": "Player 2",
-                "armies": 3,
-                "color": blue,
-                "points": [
-                    QtCore.QPointF(600, 78),
-                    QtCore.QPointF(675, 72),
-                    QtCore.QPointF(720, 104),
-                    QtCore.QPointF(660, 138),
-                    QtCore.QPointF(605, 108),
-                ],
-                "label_pos": QtCore.QPointF(656, 106),
-                "army_pos": QtCore.QPointF(656, 78),
-            },
-            {
-                "name": "Kafkasya",
-                "owner": "Player 1",
-                "armies": 3,
-                "color": red,
-                "points": [
-                    QtCore.QPointF(720, 104),
-                    QtCore.QPointF(810, 88),
-                    QtCore.QPointF(900, 132),
-                    QtCore.QPointF(874, 220),
-                    QtCore.QPointF(792, 208),
-                    QtCore.QPointF(660, 138),
-                ],
-                "label_pos": QtCore.QPointF(790, 165),
-                "army_pos": QtCore.QPointF(785, 128),
-            },
-            {
-                "name": "Anadolu",
-                "owner": "Player 1",
-                "armies": 4,
-                "color": red,
-                "points": [
-                    QtCore.QPointF(532, 172),
-                    QtCore.QPointF(648, 205),
-                    QtCore.QPointF(792, 208),
-                    QtCore.QPointF(770, 315),
-                    QtCore.QPointF(625, 335),
-                    QtCore.QPointF(505, 260),
-                ],
-                "label_pos": QtCore.QPointF(655, 245),
-                "army_pos": QtCore.QPointF(650, 205),
-            },
-            {
-                "name": "Kuzey Afrika",
-                "owner": "Player 2",
-                "armies": 3,
-                "color": blue,
-                "points": [
-                    QtCore.QPointF(405, 238),
-                    QtCore.QPointF(505, 260),
-                    QtCore.QPointF(625, 335),
-                    QtCore.QPointF(588, 420),
-                    QtCore.QPointF(470, 438),
-                    QtCore.QPointF(390, 350),
-                ],
-                "label_pos": QtCore.QPointF(505, 338),
-                "army_pos": QtCore.QPointF(498, 298),
-            },
-            {
-                "name": "Orta Doğu",
-                "owner": "Player 1",
-                "armies": 3,
-                "color": red,
-                "points": [
-                    QtCore.QPointF(625, 335),
-                    QtCore.QPointF(770, 315),
-                    QtCore.QPointF(860, 350),
-                    QtCore.QPointF(845, 430),
-                    QtCore.QPointF(705, 462),
-                    QtCore.QPointF(588, 420),
-                ],
-                "label_pos": QtCore.QPointF(720, 390),
-                "army_pos": QtCore.QPointF(715, 350),
-            },
-            {
-                "name": "Asya",
-                "owner": "Player 1",
-                "armies": 5,
-                "color": red,
-                "points": [
-                    QtCore.QPointF(810, 88),
-                    QtCore.QPointF(948, 115),
-                    QtCore.QPointF(985, 210),
-                    QtCore.QPointF(970, 322),
-                    QtCore.QPointF(860, 350),
-                    QtCore.QPointF(770, 315),
-                    QtCore.QPointF(792, 208),
-                    QtCore.QPointF(874, 220),
-                    QtCore.QPointF(900, 132),
-                ],
-                "label_pos": QtCore.QPointF(905, 230),
-                "army_pos": QtCore.QPointF(905, 190),
-            },
-            {
-                "name": "Avustralya",
-                "owner": "Player 2",
-                "armies": 2,
-                "color": blue,
-                "points": [
-                    QtCore.QPointF(820, 410),
-                    QtCore.QPointF(925, 395),
-                    QtCore.QPointF(975, 455),
-                    QtCore.QPointF(945, 520),
-                    QtCore.QPointF(842, 515),
-                    QtCore.QPointF(790, 455),
-                ],
-                "label_pos": QtCore.QPointF(885, 465),
-                "army_pos": QtCore.QPointF(880, 430),
-            },
-        ]
+    # NORTH AMERICA
+    {
+        "name": "Alaska",
+        "owner": "Player 1",
+        "armies": 3,
+        "color": red,
+        "points": [
+            QtCore.QPointF(35, 95), QtCore.QPointF(105, 60),
+            QtCore.QPointF(170, 88), QtCore.QPointF(145, 135),
+            QtCore.QPointF(75, 150), QtCore.QPointF(30, 125),
+        ],
+        "label_pos": QtCore.QPointF(95, 112),
+        "army_pos": QtCore.QPointF(88, 78),
+    },
+    {
+        "name": "Yukon",
+        "owner": "Player 2",
+        "armies": 3,
+        "color": blue,
+        "points": [
+            QtCore.QPointF(145, 75), QtCore.QPointF(245, 60),
+            QtCore.QPointF(315, 92), QtCore.QPointF(285, 150),
+            QtCore.QPointF(175, 160), QtCore.QPointF(145, 135),
+            QtCore.QPointF(170, 88),
+        ],
+        "label_pos": QtCore.QPointF(230, 112),
+        "army_pos": QtCore.QPointF(222, 78),
+    },
+    {
+        "name": "Batı Kanada",
+        "owner": "Player 2",
+        "armies": 3,
+        "color": blue,
+        "points": [
+            QtCore.QPointF(75, 150), QtCore.QPointF(145, 135),
+            QtCore.QPointF(175, 160), QtCore.QPointF(170, 225),
+            QtCore.QPointF(95, 245), QtCore.QPointF(55, 195),
+        ],
+        "label_pos": QtCore.QPointF(118, 188),
+        "army_pos": QtCore.QPointF(115, 158),
+    },
+    {
+        "name": "Doğu Kanada",
+        "owner": "Player 1",
+        "armies": 3,
+        "color": red,
+        "points": [
+            QtCore.QPointF(175, 160), QtCore.QPointF(285, 150),
+            QtCore.QPointF(350, 180), QtCore.QPointF(335, 250),
+            QtCore.QPointF(230, 260), QtCore.QPointF(170, 225),
+        ],
+        "label_pos": QtCore.QPointF(260, 205),
+        "army_pos": QtCore.QPointF(255, 172),
+    },
+    {
+        "name": "Batı Amerika",
+        "owner": "Player 2",
+        "armies": 3,
+        "color": blue,
+        "points": [
+            QtCore.QPointF(95, 245), QtCore.QPointF(170, 225),
+            QtCore.QPointF(230, 260), QtCore.QPointF(220, 330),
+            QtCore.QPointF(145, 340), QtCore.QPointF(85, 292),
+        ],
+        "label_pos": QtCore.QPointF(155, 285),
+        "army_pos": QtCore.QPointF(152, 250),
+    },
+    {
+        "name": "Doğu Amerika",
+        "owner": "Player 1",
+        "armies": 3,
+        "color": red,
+        "points": [
+            QtCore.QPointF(230, 260), QtCore.QPointF(335, 250),
+            QtCore.QPointF(365, 325), QtCore.QPointF(315, 390),
+            QtCore.QPointF(220, 330),
+        ],
+        "label_pos": QtCore.QPointF(292, 315),
+        "army_pos": QtCore.QPointF(290, 278),
+    },
+    {
+        "name": "Orta Amerika",
+        "owner": "Player 2",
+        "armies": 3,
+        "color": blue,
+        "points": [
+            QtCore.QPointF(145, 340), QtCore.QPointF(220, 330),
+            QtCore.QPointF(315, 390), QtCore.QPointF(280, 435),
+            QtCore.QPointF(190, 420),
+        ],
+        "label_pos": QtCore.QPointF(232, 385),
+        "army_pos": QtCore.QPointF(230, 350),
+    },
+
+    # SOUTH AMERICA
+    {
+        "name": "Venezuela",
+        "owner": "Player 1",
+        "armies": 3,
+        "color": red,
+        "points": [
+            QtCore.QPointF(190, 420), QtCore.QPointF(280, 435),
+            QtCore.QPointF(305, 475), QtCore.QPointF(245, 500),
+            QtCore.QPointF(190, 470),
+        ],
+        "label_pos": QtCore.QPointF(245, 460),
+        "army_pos": QtCore.QPointF(242, 430),
+    },
+    {
+        "name": "Peru",
+        "owner": "Player 2",
+        "armies": 3,
+        "color": blue,
+        "points": [
+            QtCore.QPointF(190, 470), QtCore.QPointF(245, 500),
+            QtCore.QPointF(255, 565), QtCore.QPointF(205, 560),
+            QtCore.QPointF(175, 510),
+        ],
+        "label_pos": QtCore.QPointF(220, 525),
+        "army_pos": QtCore.QPointF(218, 492),
+    },
+    {
+        "name": "Brezilya",
+        "owner": "Player 1",
+        "armies": 3,
+        "color": red,
+        "points": [
+            QtCore.QPointF(245, 500), QtCore.QPointF(305, 475),
+            QtCore.QPointF(350, 530), QtCore.QPointF(330, 610),
+            QtCore.QPointF(255, 565),
+        ],
+        "label_pos": QtCore.QPointF(300, 545),
+        "army_pos": QtCore.QPointF(295, 510),
+    },
+    {
+        "name": "Arjantin",
+        "owner": "Player 2",
+        "armies": 3,
+        "color": blue,
+        "points": [
+            QtCore.QPointF(255, 565), QtCore.QPointF(330, 610),
+            QtCore.QPointF(300, 675), QtCore.QPointF(225, 650),
+            QtCore.QPointF(205, 560),
+        ],
+        "label_pos": QtCore.QPointF(270, 620),
+        "army_pos": QtCore.QPointF(265, 585),
+    },
+
+    # EUROPE
+    {
+        "name": "İzlanda",
+        "owner": "Player 2",
+        "armies": 3,
+        "color": blue,
+        "points": [
+            QtCore.QPointF(415, 80), QtCore.QPointF(465, 65),
+            QtCore.QPointF(505, 95), QtCore.QPointF(480, 132),
+            QtCore.QPointF(425, 125),
+        ],
+        "label_pos": QtCore.QPointF(460, 102),
+        "army_pos": QtCore.QPointF(458, 72),
+    },
+    {
+        "name": "Britanya",
+        "owner": "Player 1",
+        "armies": 3,
+        "color": red,
+        "points": [
+            QtCore.QPointF(430, 155), QtCore.QPointF(490, 135),
+            QtCore.QPointF(530, 175), QtCore.QPointF(505, 235),
+            QtCore.QPointF(445, 225), QtCore.QPointF(415, 180),
+        ],
+        "label_pos": QtCore.QPointF(472, 185),
+        "army_pos": QtCore.QPointF(468, 152),
+    },
+    {
+        "name": "İskandinavya",
+        "owner": "Player 2",
+        "armies": 3,
+        "color": blue,
+        "points": [
+            QtCore.QPointF(520, 90), QtCore.QPointF(610, 70),
+            QtCore.QPointF(675, 110), QtCore.QPointF(650, 175),
+            QtCore.QPointF(570, 165), QtCore.QPointF(530, 130),
+        ],
+        "label_pos": QtCore.QPointF(595, 125),
+        "army_pos": QtCore.QPointF(590, 90),
+    },
+    {
+        "name": "Batı Avrupa",
+        "owner": "Player 1",
+        "armies": 3,
+        "color": red,
+        "points": [
+            QtCore.QPointF(505, 235), QtCore.QPointF(570, 220),
+            QtCore.QPointF(595, 285), QtCore.QPointF(545, 335),
+            QtCore.QPointF(480, 310), QtCore.QPointF(445, 225),
+        ],
+        "label_pos": QtCore.QPointF(535, 275),
+        "army_pos": QtCore.QPointF(528, 240),
+    },
+    {
+        "name": "Orta Avrupa",
+        "owner": "Player 2",
+        "armies": 3,
+        "color": blue,
+        "points": [
+            QtCore.QPointF(570, 165), QtCore.QPointF(650, 175),
+            QtCore.QPointF(690, 230), QtCore.QPointF(650, 290),
+            QtCore.QPointF(595, 285), QtCore.QPointF(570, 220),
+        ],
+        "label_pos": QtCore.QPointF(625, 225),
+        "army_pos": QtCore.QPointF(620, 190),
+    },
+    {
+        "name": "Balkanlar",
+        "owner": "Player 1",
+        "armies": 3,
+        "color": red,
+        "points": [
+            QtCore.QPointF(650, 290), QtCore.QPointF(720, 275),
+            QtCore.QPointF(760, 330), QtCore.QPointF(725, 385),
+            QtCore.QPointF(660, 360), QtCore.QPointF(595, 285),
+        ],
+        "label_pos": QtCore.QPointF(680, 325),
+        "army_pos": QtCore.QPointF(675, 292),
+    },
+    {
+        "name": "Trakya",
+        "owner": "Player 2",
+        "armies": 3,
+        "color": blue,
+        "points": [
+            QtCore.QPointF(690, 230), QtCore.QPointF(770, 220),
+            QtCore.QPointF(805, 260), QtCore.QPointF(760, 330),
+            QtCore.QPointF(720, 275),
+        ],
+        "label_pos": QtCore.QPointF(748, 262),
+        "army_pos": QtCore.QPointF(745, 232),
+    },
+
+    # AFRICA + MIDDLE EAST
+    {
+        "name": "Kuzey Afrika",
+        "owner": "Player 1",
+        "armies": 3,
+        "color": red,
+        "points": [
+            QtCore.QPointF(480, 310), QtCore.QPointF(545, 335),
+            QtCore.QPointF(660, 360), QtCore.QPointF(620, 435),
+            QtCore.QPointF(505, 430), QtCore.QPointF(455, 370),
+        ],
+        "label_pos": QtCore.QPointF(555, 380),
+        "army_pos": QtCore.QPointF(550, 340),
+    },
+    {
+        "name": "Mısır",
+        "owner": "Player 2",
+        "armies": 3,
+        "color": blue,
+        "points": [
+            QtCore.QPointF(660, 360), QtCore.QPointF(725, 385),
+            QtCore.QPointF(760, 445), QtCore.QPointF(700, 480),
+            QtCore.QPointF(620, 435),
+        ],
+        "label_pos": QtCore.QPointF(690, 425),
+        "army_pos": QtCore.QPointF(685, 388),
+    },
+    {
+        "name": "Orta Afrika",
+        "owner": "Player 1",
+        "armies": 3,
+        "color": red,
+        "points": [
+            QtCore.QPointF(505, 430), QtCore.QPointF(620, 435),
+            QtCore.QPointF(700, 480), QtCore.QPointF(660, 565),
+            QtCore.QPointF(550, 555), QtCore.QPointF(490, 500),
+        ],
+        "label_pos": QtCore.QPointF(590, 500),
+        "army_pos": QtCore.QPointF(585, 462),
+    },
+    {
+        "name": "Güney Afrika",
+        "owner": "Player 2",
+        "armies": 3,
+        "color": blue,
+        "points": [
+            QtCore.QPointF(550, 555), QtCore.QPointF(660, 565),
+            QtCore.QPointF(630, 675), QtCore.QPointF(535, 660),
+            QtCore.QPointF(505, 600),
+        ],
+        "label_pos": QtCore.QPointF(585, 615),
+        "army_pos": QtCore.QPointF(580, 575),
+    },
+    {
+        "name": "Orta Doğu",
+        "owner": "Player 1",
+        "armies": 3,
+        "color": red,
+        "points": [
+            QtCore.QPointF(760, 330), QtCore.QPointF(835, 325),
+            QtCore.QPointF(870, 390), QtCore.QPointF(835, 465),
+            QtCore.QPointF(760, 445), QtCore.QPointF(725, 385),
+        ],
+        "label_pos": QtCore.QPointF(805, 392),
+        "army_pos": QtCore.QPointF(800, 352),
+    },
+
+    # ASIA
+    {
+        "name": "Kafkasya",
+        "owner": "Player 2",
+        "armies": 3,
+        "color": blue,
+        "points": [
+            QtCore.QPointF(805, 260), QtCore.QPointF(890, 235),
+            QtCore.QPointF(955, 270), QtCore.QPointF(935, 350),
+            QtCore.QPointF(835, 325), QtCore.QPointF(760, 330),
+        ],
+        "label_pos": QtCore.QPointF(870, 302),
+        "army_pos": QtCore.QPointF(865, 265),
+    },
+    {
+        "name": "Ural",
+        "owner": "Player 1",
+        "armies": 3,
+        "color": red,
+        "points": [
+            QtCore.QPointF(890, 235), QtCore.QPointF(965, 190),
+            QtCore.QPointF(1040, 230), QtCore.QPointF(1015, 305),
+            QtCore.QPointF(955, 270),
+        ],
+        "label_pos": QtCore.QPointF(970, 245),
+        "army_pos": QtCore.QPointF(965, 210),
+    },
+    {
+        "name": "Sibirya",
+        "owner": "Player 2",
+        "armies": 3,
+        "color": blue,
+        "points": [
+            QtCore.QPointF(965, 190), QtCore.QPointF(1105, 170),
+            QtCore.QPointF(1180, 235), QtCore.QPointF(1140, 330),
+            QtCore.QPointF(1015, 305),
+        ],
+        "label_pos": QtCore.QPointF(1080, 250),
+        "army_pos": QtCore.QPointF(1075, 210),
+    },
+    {
+        "name": "Orta Asya",
+        "owner": "Player 1",
+        "armies": 3,
+        "color": red,
+        "points": [
+            QtCore.QPointF(955, 270), QtCore.QPointF(1015, 305),
+            QtCore.QPointF(1050, 390), QtCore.QPointF(975, 440),
+            QtCore.QPointF(870, 390), QtCore.QPointF(835, 325),
+        ],
+        "label_pos": QtCore.QPointF(950, 360),
+        "army_pos": QtCore.QPointF(945, 320),
+    },
+    {
+        "name": "Çin",
+        "owner": "Player 2",
+        "armies": 3,
+        "color": blue,
+        "points": [
+            QtCore.QPointF(1015, 305), QtCore.QPointF(1140, 330),
+            QtCore.QPointF(1165, 430), QtCore.QPointF(1085, 500),
+            QtCore.QPointF(975, 440), QtCore.QPointF(1050, 390),
+        ],
+        "label_pos": QtCore.QPointF(1080, 400),
+        "army_pos": QtCore.QPointF(1075, 360),
+    },
+    {
+        "name": "Hindistan",
+        "owner": "Player 1",
+        "armies": 3,
+        "color": red,
+        "points": [
+            QtCore.QPointF(870, 390), QtCore.QPointF(975, 440),
+            QtCore.QPointF(970, 545), QtCore.QPointF(890, 535),
+            QtCore.QPointF(835, 465),
+        ],
+        "label_pos": QtCore.QPointF(910, 475),
+        "army_pos": QtCore.QPointF(905, 438),
+    },
+    {
+        "name": "Güneydoğu Asya",
+        "owner": "Player 2",
+        "armies": 3,
+        "color": blue,
+        "points": [
+            QtCore.QPointF(970, 545), QtCore.QPointF(1085, 500),
+            QtCore.QPointF(1135, 565), QtCore.QPointF(1070, 635),
+            QtCore.QPointF(985, 610),
+        ],
+        "label_pos": QtCore.QPointF(1045, 565),
+        "army_pos": QtCore.QPointF(1040, 525),
+    },
+    {
+        "name": "Japonya",
+        "owner": "Player 1",
+        "armies": 3,
+        "color": red,
+        "points": [
+            QtCore.QPointF(1180, 235), QtCore.QPointF(1245, 260),
+            QtCore.QPointF(1230, 350), QtCore.QPointF(1165, 430),
+            QtCore.QPointF(1140, 330),
+        ],
+        "label_pos": QtCore.QPointF(1195, 330),
+        "army_pos": QtCore.QPointF(1190, 290),
+    },
+
+    # AUSTRALIA / OCEANIA
+    {
+        "name": "Endonezya",
+        "owner": "Player 2",
+        "armies": 3,
+        "color": blue,
+        "points": [
+            QtCore.QPointF(985, 610), QtCore.QPointF(1070, 635),
+            QtCore.QPointF(1120, 700), QtCore.QPointF(1045, 735),
+            QtCore.QPointF(965, 690),
+        ],
+        "label_pos": QtCore.QPointF(1040, 680),
+        "army_pos": QtCore.QPointF(1035, 642),
+    },
+    {
+        "name": "Yeni Gine",
+        "owner": "Player 1",
+        "armies": 3,
+        "color": red,
+        "points": [
+            QtCore.QPointF(1120, 700), QtCore.QPointF(1215, 675),
+            QtCore.QPointF(1275, 735), QtCore.QPointF(1195, 785),
+            QtCore.QPointF(1045, 735),
+        ],
+        "label_pos": QtCore.QPointF(1165, 730),
+        "army_pos": QtCore.QPointF(1160, 695),
+    },
+    {
+        "name": "Batı Avustralya",
+        "owner": "Player 2",
+        "armies": 3,
+        "color": blue,
+        "points": [
+            QtCore.QPointF(1010, 775), QtCore.QPointF(1115, 750),
+            QtCore.QPointF(1180, 820), QtCore.QPointF(1130, 910),
+            QtCore.QPointF(1015, 890), QtCore.QPointF(965, 825),
+        ],
+        "label_pos": QtCore.QPointF(1070, 825),
+        "army_pos": QtCore.QPointF(1065, 785),
+    },
+    {
+        "name": "Doğu Avustralya",
+        "owner": "Player 1",
+        "armies": 3,
+        "color": red,
+        "points": [
+            QtCore.QPointF(1115, 750), QtCore.QPointF(1260, 770),
+            QtCore.QPointF(1300, 850), QtCore.QPointF(1210, 920),
+            QtCore.QPointF(1130, 910), QtCore.QPointF(1180, 820),
+        ],
+        "label_pos": QtCore.QPointF(1210, 835),
+        "army_pos": QtCore.QPointF(1205, 795),
+    },
+]
 
         self.paths = {}
         self._build_paths()
@@ -284,124 +538,189 @@ class WorldMapWidget(QtWidgets.QWidget):
         self._draw_labels(painter)
 
     def _draw_background(self, painter):
-        gradient = QtGui.QLinearGradient(0, 0, 0, self.height())
-        gradient.setColorAt(0.0, QtGui.QColor("#2aa7d4"))
-        gradient.setColorAt(0.50, QtGui.QColor("#0f6e96"))
-        gradient.setColorAt(1.0, QtGui.QColor("#083c57"))
+        gradient = QtGui.QRadialGradient(
+            QtCore.QPointF(self.width() / 2, self.height() / 2),
+            max(self.width(), self.height()) * 0.82
+        )
+        gradient.setColorAt(0.0, QtGui.QColor("#2bbbe2"))
+        gradient.setColorAt(0.42, QtGui.QColor("#1186b1"))
+        gradient.setColorAt(1.0, QtGui.QColor("#063a54"))
 
         painter.fillRect(self.rect(), gradient)
 
-        grid_pen = QtGui.QPen(QtGui.QColor(255, 255, 255, 28), 1)
+        grid_pen = QtGui.QPen(QtGui.QColor(255, 255, 255, 18), 1)
         painter.setPen(grid_pen)
 
-        step = 42
-
+        step = 45
         for x in range(0, self.width(), step):
             painter.drawLine(x, 0, x, self.height())
 
         for y in range(0, self.height(), step):
             painter.drawLine(0, y, self.width(), y)
 
-        diagonal_pen = QtGui.QPen(QtGui.QColor(255, 255, 255, 17), 1)
+        diagonal_pen = QtGui.QPen(QtGui.QColor(255, 255, 255, 10), 1)
         painter.setPen(diagonal_pen)
 
-        for i in range(-self.height(), self.width(), 80):
+        for i in range(-self.height(), self.width(), 95):
             painter.drawLine(i, 0, i + self.height(), self.height())
 
+        for i in range(0, self.width() + self.height(), 125):
+            painter.drawLine(i, 0, i - self.height(), self.height())
+
     def _draw_sea_routes(self, painter):
-        route_pen = QtGui.QPen(QtGui.QColor(255, 255, 255, 140), 3)
-        route_pen.setStyle(QtCore.Qt.PenStyle.DashLine)
+        pos = {t["name"]: t["army_pos"] for t in self.territories}
 
-        painter.setPen(route_pen)
-        painter.setBrush(QtCore.Qt.BrushStyle.NoBrush)
-
-        routes = [
-            (QtCore.QPointF(340, 165), QtCore.QPointF(430, 148)),
-            (QtCore.QPointF(305, 355), QtCore.QPointF(405, 345)),
-            (QtCore.QPointF(845, 430), QtCore.QPointF(810, 455)),
-            (QtCore.QPointF(770, 315), QtCore.QPointF(820, 320)),
+        sea_routes = [
+            ("Alaska", "Kamçatka"),
+            ("Grönland", "İzlanda"),
+            ("Brezilya", "Kuzey Afrika"),
+            ("Güney Avrupa", "Mısır"),
+            ("Orta Dogu", "Doğu Afrika"),
+            ("Siam", "Endonezya"),
+            ("Endonezya", "Yeni Gine"),
+            ("Yeni Gine", "Doğu Avustralya"),
+            ("Batı Avustralya", "Doğu Avustralya"),
         ]
 
-        for start, end in routes:
-            path = QtGui.QPainterPath()
-            path.moveTo(start)
+        glow_pen = QtGui.QPen(QtGui.QColor(255, 255, 255, 70), 7)
+        glow_pen.setStyle(QtCore.Qt.PenStyle.DotLine)
+        glow_pen.setCapStyle(QtCore.Qt.PenCapStyle.RoundCap)
+
+        route_pen = QtGui.QPen(QtGui.QColor(245, 250, 255, 230), 2.8)
+        route_pen.setStyle(QtCore.Qt.PenStyle.DotLine)
+        route_pen.setCapStyle(QtCore.Qt.PenCapStyle.RoundCap)
+
+        node_pen = QtGui.QPen(QtGui.QColor(255, 255, 255, 210), 1.5)
+        node_brush = QtGui.QBrush(QtGui.QColor(255, 255, 255, 230))
+
+        for a, b in sea_routes:
+            if a not in pos or b not in pos:
+                continue
+
+            start = pos[a]
+            end = pos[b]
 
             control = QtCore.QPointF(
                 (start.x() + end.x()) / 2,
-                (start.y() + end.y()) / 2 - 25
+                (start.y() + end.y()) / 2 - 42
             )
 
-            path.quadTo(control, end)
-            painter.drawPath(path)
+        path = QtGui.QPainterPath()
+        path.moveTo(start)
+        path.quadTo(control, end)
+
+        painter.setBrush(QtCore.Qt.BrushStyle.NoBrush)
+        painter.setPen(glow_pen)
+        painter.drawPath(path)
+
+        painter.setPen(route_pen)
+        painter.drawPath(path)
+
+        # iki uçtaki küçük beyaz bağlantı noktaları
+        painter.setPen(node_pen)
+        painter.setBrush(node_brush)
+        painter.drawEllipse(start, 3, 3)
+        painter.drawEllipse(end, 3, 3)
 
     def _draw_territories(self, painter):
         for territory in self.territories:
             name = territory["name"]
             path = self.paths[name]
+            fill_color = territory["color"]
 
-            painter.setBrush(territory["color"])
+            # Hafif gölge
+            painter.save()
+            painter.translate(3, 4)
+            painter.setBrush(QtGui.QColor(0, 0, 0, 95))
+            painter.setPen(QtCore.Qt.PenStyle.NoPen)
+            painter.drawPath(path)
+            painter.restore()
 
+            # Seçili bölge parlaması
             if self.selected_name == name:
-                painter.setPen(QtGui.QPen(QtGui.QColor(255, 240, 168, 120), 10))
+                painter.setPen(QtGui.QPen(QtGui.QColor(255, 230, 130, 145), 11))
                 painter.setBrush(QtCore.Qt.BrushStyle.NoBrush)
                 painter.drawPath(path)
-
-                pen = QtGui.QPen(QtGui.QColor("#fff0a8"), 5)
+                border_pen = QtGui.QPen(QtGui.QColor("#ffe284"), 4.5)
             else:
-                 pen = QtGui.QPen(QtGui.QColor("#092028"), 3)
+                border_pen = QtGui.QPen(QtGui.QColor("#0a1720"), 3.2)
 
-            painter.setBrush(territory["color"])
-            painter.setPen(pen)
+            painter.setBrush(fill_color)
+            painter.setPen(border_pen)
             painter.drawPath(path)
 
-            # Hafif iç parlama
+            # Üst ışık / iç parlama
             painter.setBrush(QtCore.Qt.BrushStyle.NoBrush)
-            painter.setPen(QtGui.QPen(QtGui.QColor(255, 255, 255, 35), 2))
+            painter.setPen(QtGui.QPen(QtGui.QColor(255, 255, 255, 35), 1.5))
             painter.drawPath(path)
 
     def _draw_labels(self, painter):
         for territory in self.territories:
             name = territory["name"]
-            owner = territory["owner"]
             armies = territory["armies"]
+            fill_color = territory["color"]
 
             army_pos = territory["army_pos"]
             label_pos = territory["label_pos"]
 
-            # Army marker
-            painter.setBrush(QtGui.QColor(18, 18, 18, 205))
-            painter.setPen(QtGui.QPen(QtGui.QColor("white"), 2))
-            painter.drawEllipse(army_pos, 15, 15)
+            # Aynı rengin koyu/açık tonları
+            outer_color = QtGui.QColor(fill_color).darker(145)
+            inner_color = QtGui.QColor(fill_color)
+            highlight_color = QtGui.QColor(fill_color).lighter(135)
 
-            army_font = QtGui.QFont("Segoe UI", 9)
+            # Dış gölge
+            painter.setPen(QtCore.Qt.PenStyle.NoPen)
+            painter.setBrush(QtGui.QColor(0, 0, 0, 95))
+            painter.drawEllipse(
+                QtCore.QPointF(army_pos.x() + 2.5, army_pos.y() + 3),
+                22, 22
+            )
+
+            # Dış halka
+            painter.setPen(QtGui.QPen(QtGui.QColor(255, 255, 255, 150), 2.2))
+            painter.setBrush(outer_color)
+            painter.drawEllipse(army_pos, 21, 21)
+
+            # İç disk
+            painter.setPen(QtGui.QPen(QtGui.QColor(255, 255, 255, 80), 1.4))
+            painter.setBrush(inner_color)
+            painter.drawEllipse(army_pos, 17, 17)
+
+            # Üst parlama (kabartma hissi)
+            painter.setPen(QtCore.Qt.PenStyle.NoPen)
+            painter.setBrush(QtGui.QColor(highlight_color.red(), highlight_color.green(), highlight_color.blue(), 120))
+            painter.drawEllipse(
+                QtCore.QPointF(army_pos.x() - 4, army_pos.y() - 5),
+                8, 6
+            )
+
+            # Asker sayısı
+            army_font = QtGui.QFont("Segoe UI", 11)
             army_font.setBold(True)
             painter.setFont(army_font)
             painter.setPen(QtGui.QColor("white"))
             painter.drawText(
-                QtCore.QRectF(army_pos.x() - 15, army_pos.y() - 15, 30, 30),
+                QtCore.QRectF(army_pos.x() - 18, army_pos.y() - 18, 36, 36),
                 QtCore.Qt.AlignmentFlag.AlignCenter,
                 str(armies)
             )
 
-            # Oyuncu kısaltması
-            owner_short = "P1" if owner == "Player 1" else "P2"
+            # Sadece bölge adı
+            label_rect = QtCore.QRectF(label_pos.x() - 52, label_pos.y() - 12, 104, 24)
 
-            # Territory name box
-            label_rect = QtCore.QRectF(label_pos.x() - 58, label_pos.y() - 17, 116, 36)
+            painter.setBrush(QtGui.QColor(0, 0, 0, 95))
+            painter.setPen(QtGui.QPen(QtGui.QColor(255, 255, 255, 45), 1))
+            painter.drawRoundedRect(label_rect, 7, 7)
 
-            painter.setBrush(QtGui.QColor(0, 0, 0, 88))
-            painter.setPen(QtGui.QPen(QtGui.QColor(255, 255, 255, 65), 1))
-            painter.drawRoundedRect(label_rect, 8, 8)
-
-            label_font = QtGui.QFont("Segoe UI", 8)
-            label_font.setBold(True)
+            label_font = QtGui.QFont("Segoe UI Semibold", 6)
             painter.setFont(label_font)
             painter.setPen(QtGui.QColor("white"))
             painter.drawText(
                 label_rect,
                 QtCore.Qt.AlignmentFlag.AlignCenter,
-                f"{name}\n{owner_short} - {armies}"
+                name
             )
+            
 
     def mousePressEvent(self, event):
         world_pos = self._screen_to_world(event.position())
@@ -689,21 +1008,21 @@ QFrame#diceFrame {
         self.territoryList.setStyleSheet("""
         QListWidget {
             background-color: rgba(0, 0, 0, 0.22);
-            border: 1px solid #3b443b;
-            border-radius: 8px;
-            color: #ececec;
+            border: 1px solid #36413f;
+            border-radius: 10px;
+            color: #f0f0f0;
             font-size: 12px;
-            padding: 6px;
+            padding: 8px;
         }
 
         QListWidget::item {
-            padding: 6px;
+            padding: 7px;
             margin: 2px;
-            border-radius: 5px;
+            border-radius: 6px;
         }
 
         QListWidget::item:selected {
-            background-color: #c5a059;
+            background-color: #d4b067;
             color: #111;
         }
         """)

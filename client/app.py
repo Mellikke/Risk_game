@@ -8,7 +8,7 @@ sys.path.append(BASE_DIR)
 from PyQt6.QtWidgets import QApplication, QMainWindow
 from ui_game_window import Ui_MainWindow
 from game.game_engine import GameEngine
-
+from PyQt6 import QtGui
 
 class RiskGameWindow(QMainWindow):
     def __init__(self, player_name=None, player_role=None, network_client=None):
@@ -80,14 +80,13 @@ class RiskGameWindow(QMainWindow):
             "Orta Doğu": "Orta Dogu",
             "Orta Dogu": "Orta Dogu",
         }
-
         return name_map.get(name, name)
+
 
     def display_territory_name(self, name):
         name_map = {
             "Orta Dogu": "Orta Doğu",
         }
-
         return name_map.get(name, name)
 
     def update_screen(self):
@@ -135,9 +134,9 @@ class RiskGameWindow(QMainWindow):
                 item["armies"] = territory.armies
 
                 if territory.owner.name == "Player 1":
-                    item["color"] = item["color"].fromString("#d32929")
+                    item["color"] = QtGui.QColor("#d7262d")   
                 else:
-                    item["color"] = item["color"].fromString("#2f63e6")
+                    item["color"] = QtGui.QColor("#2d6df6")   
 
                 break
 
