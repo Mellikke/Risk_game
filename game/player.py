@@ -15,8 +15,13 @@ class Player:
             self.territories.remove(territory)
 
     def calculate_reinforcements(self):
-        count = len(self.territories) // 3
-        if count < 3:
-            count = 3
+        territory_count = len(self.territories)
 
-        self.reinforcements = count
+        # Risk mantığı: minimum 3 asker, bölge sayısı arttıkça artar.
+        base_reinforcement = max(3, territory_count // 3)
+
+        # Şimdilik kart bonusu yok.
+        card_bonus = 0
+
+        self.reinforcements = base_reinforcement + card_bonus
+        return self.reinforcements

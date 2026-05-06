@@ -17,8 +17,8 @@ class WorldMapWidget(QtWidgets.QWidget):
         self.base_height = 940
         self.selected_name = None
 
-        blue = QtGui.QColor("#768dca")
-        red = QtGui.QColor("#965252")
+        blue = QtGui.QColor("#2d6df6")
+        red = QtGui.QColor("#d7262d")
 
         # SADECE TEK HARİTA SETİ VAR.
         # Farklı renkli eski ikinci harita tamamen kaldırıldı.
@@ -368,8 +368,8 @@ class WorldMapWidget(QtWidgets.QWidget):
             QtCore.QPointF(1180, 235), QtCore.QPointF(1140, 330),
             QtCore.QPointF(1015, 305),
         ],
-        "label_pos": QtCore.QPointF(1080, 250),
-        "army_pos": QtCore.QPointF(1075, 210),
+         "label_pos": QtCore.QPointF(1048, 225),
+         "army_pos": QtCore.QPointF(1050, 188),
     },
     {
         "name": "Moğolistan",
@@ -580,8 +580,8 @@ class WorldMapWidget(QtWidgets.QWidget):
             QtCore.QPointF(1180, 235), QtCore.QPointF(1140, 330),
             QtCore.QPointF(1015, 305),
         ],
-        "label_pos": QtCore.QPointF(1095, 270),
-        "army_pos": QtCore.QPointF(1090, 235),
+         "label_pos": QtCore.QPointF(1115, 275),
+         "army_pos": QtCore.QPointF(1145, 245),
     },
 ]
 
@@ -660,31 +660,30 @@ class WorldMapWidget(QtWidgets.QWidget):
         for i in range(0, self.width() + self.height(), 125):
             painter.drawLine(i, 0, i - self.height(), self.height())
 
+        
     def _draw_sea_routes(self, painter):
         pos = {t["name"]: t["army_pos"] for t in self.territories}
 
         sea_routes = [
-            ("Alaska", "Kamçatka"),
-            ("Grönland", "İzlanda"),
-            ("Brezilya", "Kuzey Afrika"),
-            ("Güney Avrupa", "Mısır"),
-            ("Mısır", "Orta Dogu"),
-            ("Orta Dogu", "Hindistan"),
-            ("Siam", "Endonezya"),
-            ("Endonezya", "Yeni Gine"),
-            ("Yeni Gine", "Doğu Avustralya"),
+              ("Brezilya", "Güney Afrika"),
+              ("Doğu Afrika", "Madagaskar"),
+              ("Siam", "Yeni Gine"),
+              ("Quebec", "Büyük Britanya"),
+              ("Doğu ABD", "Kuzey Afrika"),
         ]
 
-        glow_pen = QtGui.QPen(QtGui.QColor(255, 255, 255, 70), 7)
-        glow_pen.setStyle(QtCore.Qt.PenStyle.DotLine)
+        glow_pen = QtGui.QPen(QtGui.QColor(255, 255, 255, 35), 6)
+        glow_pen.setStyle(QtCore.Qt.PenStyle.DashLine)
         glow_pen.setCapStyle(QtCore.Qt.PenCapStyle.RoundCap)
 
-        route_pen = QtGui.QPen(QtGui.QColor(245, 250, 255, 230), 2.8)
-        route_pen.setStyle(QtCore.Qt.PenStyle.DotLine)
+        route_pen = QtGui.QPen(QtGui.QColor(245, 250, 255, 95), 2)
+        route_pen.setStyle(QtCore.Qt.PenStyle.DashLine)
         route_pen.setCapStyle(QtCore.Qt.PenCapStyle.RoundCap)
 
-        node_pen = QtGui.QPen(QtGui.QColor(255, 255, 255, 210), 1.5)
-        node_brush = QtGui.QBrush(QtGui.QColor(255, 255, 255, 230))
+        node_pen = QtGui.QPen(QtGui.QColor(255, 255, 255, 110), 1)
+        node_brush = QtGui.QBrush(QtGui.QColor(255, 255, 255, 120))
+
+        painter.setBrush(QtCore.Qt.BrushStyle.NoBrush)
 
         for a, b in sea_routes:
             if a not in pos or b not in pos:
@@ -695,25 +694,24 @@ class WorldMapWidget(QtWidgets.QWidget):
 
             control = QtCore.QPointF(
                 (start.x() + end.x()) / 2,
-                (start.y() + end.y()) / 2 - 42
+                (start.y() + end.y()) / 2 - 35
             )
 
-        path = QtGui.QPainterPath()
-        path.moveTo(start)
-        path.quadTo(control, end)
+            path = QtGui.QPainterPath()
+            path.moveTo(start)
+            path.quadTo(control, end)
 
-        painter.setBrush(QtCore.Qt.BrushStyle.NoBrush)
-        painter.setPen(glow_pen)
-        painter.drawPath(path)
+            painter.setPen(glow_pen)
+            painter.drawPath(path)
 
-        painter.setPen(route_pen)
-        painter.drawPath(path)
+            painter.setPen(route_pen)
+            painter.drawPath(path)
 
-        # iki uçtaki küçük beyaz bağlantı noktaları
-        painter.setPen(node_pen)
-        painter.setBrush(node_brush)
-        painter.drawEllipse(start, 3, 3)
-        painter.drawEllipse(end, 3, 3)
+            painter.setPen(node_pen)
+            painter.setBrush(node_brush)
+            painter.drawEllipse(start, 2.5, 2.5)
+            painter.drawEllipse(end, 2.5, 2.5)
+            painter.setBrush(QtCore.Qt.BrushStyle.NoBrush)
 
     def _draw_territories(self, painter):
         for territory in self.territories:
@@ -804,7 +802,7 @@ class WorldMapWidget(QtWidgets.QWidget):
 
             # --- Bölge adı ---
             # Kutucuk yok, sadece gölgeli yazı
-            label_font = QtGui.QFont("Segoe UI Semibold", 8)
+            label_font = QtGui.QFont("Segoe UI Semibold", 9)
             painter.setFont(label_font)
 
             text_rect = QtCore.QRectF(label_pos.x() - 50, label_pos.y() - 10, 100, 22)
@@ -826,7 +824,10 @@ class WorldMapWidget(QtWidgets.QWidget):
     def mousePressEvent(self, event):
         world_pos = self._screen_to_world(event.position())
 
-        for territory in self.territories:
+        # Son çizilen bölge üstte görünür.
+        # Bu yüzden tıklamada da sondan başa kontrol ediyoruz.
+        # Böylece Irkutsk gibi Sibirya'nın üstüne gelen bölgeler doğru seçilir.
+        for territory in reversed(self.territories):
             name = territory["name"]
 
             if self.paths[name].contains(world_pos):
@@ -841,112 +842,122 @@ class WorldMapWidget(QtWidgets.QWidget):
 
         super().mousePressEvent(event)
 
-
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
-        MainWindow.resize(1380, 920)
+        MainWindow.resize(1450, 800)
 
         MainWindow.setStyleSheet("""
 QMainWindow {
-    background-color: #080908;
+    background-color: #050706;
 }
 
 QWidget#centralwidget {
     background-color: qlineargradient(
         spread: pad,
-        x1: 0.5,
-        y1: 0,
-        x2: 0.5,
-        y2: 1,
-        stop: 0 #161a16,
-        stop: 1 #050505
+        x1: 0.5, y1: 0,
+        x2: 0.5, y2: 1,
+        stop: 0 #101611,
+        stop: 0.45 #090d09,
+        stop: 1 #050605
     );
 }
 
 QGroupBox {
-    border: 1px solid #3f483f;
-    border-radius: 10px;
+    border: 1px solid rgba(214, 175, 91, 0.45);
+    border-radius: 18px;
     margin-top: 18px;
-    background-color: rgba(10, 16, 10, 225);
+    background-color: rgba(4, 10, 7, 245);
     color: #d6af5b;
-    font-weight: bold;
     font-family: "Segoe UI Semibold";
+    font-size: 15px;
+    font-weight: bold;
 }
 
 QGroupBox::title {
     subcontrol-origin: margin;
-    left: 12px;
-    padding: 0 6px;
+    left: 16px;
+    padding: 0 9px;
 }
 
 QLabel {
-    color: #ececec;
+    color: #f4f4f4;
     font-size: 14px;
-}
-
-QLabel#resultLabel {
-    background-color: #060907;
-    border: 1px solid #283028;
-    border-radius: 10px;
-    padding: 14px;
-    color: #a6c3a5;
-    font-family: "Consolas";
-    font-size: 15px;
-}
-
-QPushButton {
-    background-color: #232823;
-    border: 1px solid #465046;
-    color: #ececec;
-    border-radius: 8px;
-    padding: 10px;
-    font-weight: bold;
-    font-size: 15px;
-}
-
-QPushButton:hover {
-    background-color: #313931;
-    border: 1px solid #d6af5b;
-}
-
-QPushButton:pressed {
-    background-color: #171b17;
-}
-
-QListWidget {
-    background-color: rgba(0, 0, 0, 0.15);
-    border: 1px solid #313831;
-    border-radius: 8px;
-    color: #ececec;
-    font-size: 14px;
-    padding: 6px;
+    font-family: "Segoe UI";
 }
 
 QFrame#mapFrame {
     background-color: #0b3c57;
     border: 2px solid #d6af5b;
-    border-radius: 10px;
+    border-radius: 14px;
+}
+
+QFrame#legendFrame {
+    background-color: rgba(0, 0, 0, 0.24);
+    border: 1px solid rgba(214, 175, 91, 0.18);
+    border-radius: 13px;
 }
 
 QFrame#diceFrame {
-    background-color: #101510;
-    border: 1px solid #2d352d;
+    background-color: rgba(4, 9, 6, 245);
+    border: 1px solid rgba(214, 175, 91, 0.30);
+    border-radius: 13px;
+}
+
+QListWidget {
+    background-color: rgba(0, 0, 0, 0.30);
+    border: 1px solid rgba(214, 175, 91, 0.25);
+    border-radius: 13px;
+    color: #f2f2f2;
+    font-size: 13px;
+    padding: 9px;
+    outline: none;
+}
+
+QListWidget::item {
+    padding: 9px;
+    margin: 3px;
     border-radius: 8px;
 }
-        """)
+
+QListWidget::item:hover {
+    background-color: rgba(214, 175, 91, 0.14);
+}
+
+QListWidget::item:selected {
+    background-color: #d6af5b;
+    color: #0a0a0a;
+    font-weight: bold;
+}
+
+QPushButton {
+    border-radius: 13px;
+    padding: 11px;
+    font-family: "Segoe UI Semibold";
+    font-weight: bold;
+    font-size: 17px;
+    color: white;
+}
+
+QPushButton:disabled {
+    background-color: #202420;
+    color: #7a7a7a;
+    border: 1px solid #343834;
+}
+""")
+
 
         self.centralwidget = QtWidgets.QWidget(parent=MainWindow)
         self.centralwidget.setObjectName("centralwidget")
 
         self.mainLayout = QtWidgets.QVBoxLayout(self.centralwidget)
-        self.mainLayout.setContentsMargins(16, 14, 16, 14)
-        self.mainLayout.setSpacing(12)
+        self.mainLayout.setContentsMargins(10, 10, 10, 10)
+        self.mainLayout.setSpacing(8)
         self.mainLayout.setObjectName("mainLayout")
 
         # HEADER
         self.headerFrame = QtWidgets.QFrame(parent=self.centralwidget)
-        self.headerFrame.setMinimumSize(QtCore.QSize(0, 90))
+        self.headerFrame.setMinimumSize(QtCore.QSize(0, 74))
         self.headerFrame.setObjectName("headerFrame")
 
         self.headerContent = QtWidgets.QVBoxLayout(self.headerFrame)
@@ -956,7 +967,7 @@ QFrame#diceFrame {
 
         self.titleLabel = QtWidgets.QLabel(parent=self.headerFrame)
         self.titleLabel.setStyleSheet(
-            "font-size: 38px; "
+            "font-size: 34px; "
             "font-weight: 800; "
             "color: #d6af5b; "
             "letter-spacing: 12px;"
@@ -979,13 +990,13 @@ QFrame#diceFrame {
 
         # MIDDLE AREA
         self.gameAreaLayout = QtWidgets.QHBoxLayout()
-        self.gameAreaLayout.setSpacing(12)
+        self.gameAreaLayout.setSpacing(8)
         self.gameAreaLayout.setObjectName("gameAreaLayout")
 
         # LEFT STATUS PANEL
         self.statusGroupBox = QtWidgets.QGroupBox(parent=self.centralwidget)
-        self.statusGroupBox.setMinimumSize(QtCore.QSize(235, 0))
-        self.statusGroupBox.setMaximumWidth(260)
+        self.statusGroupBox.setMinimumSize(QtCore.QSize(250, 0))
+        self.statusGroupBox.setMaximumWidth(275)
         self.statusGroupBox.setObjectName("statusGroupBox")
 
         self.statusLayout = QtWidgets.QVBoxLayout(self.statusGroupBox)
@@ -994,21 +1005,63 @@ QFrame#diceFrame {
         self.statusLayout.setObjectName("statusLayout")
 
         self.currentPlayerLabel = QtWidgets.QLabel(parent=self.statusGroupBox)
+        self.currentPlayerLabel.setStyleSheet("""
+QLabel {
+    background-color: rgba(214, 175, 91, 0.09);
+    border: 1px solid rgba(214, 175, 91, 0.22);
+    border-radius: 11px;
+    padding: 10px;
+    color: #f8f3df;
+    font-size: 15px;
+    font-family: "Segoe UI Semibold";
+}
+""")
         self.currentPlayerLabel.setObjectName("currentPlayerLabel")
         self.statusLayout.addWidget(self.currentPlayerLabel)
 
         self.phaseLabel = QtWidgets.QLabel(parent=self.statusGroupBox)
+        self.phaseLabel.setStyleSheet("""
+QLabel {
+    background-color: rgba(255, 255, 255, 0.035);
+    border: 1px solid rgba(255, 255, 255, 0.09);
+    border-radius: 11px;
+    padding: 10px;
+    color: #eeeeee;
+    font-size: 14px;
+    font-family: "Segoe UI Semibold";
+}
+""")
         self.phaseLabel.setObjectName("phaseLabel")
         self.statusLayout.addWidget(self.phaseLabel)
 
         self.reinforcementLabel = QtWidgets.QLabel(parent=self.statusGroupBox)
-        self.reinforcementLabel.setStyleSheet("color: #31ff6b; font-weight: bold;")
+        self.reinforcementLabel.setStyleSheet("""
+QLabel {
+    background-color: rgba(20, 120, 50, 0.16);
+    border: 1px solid rgba(60, 255, 140, 0.30);
+    border-radius: 11px;
+    padding: 10px;
+    color: #38ff8c;
+    font-size: 15px;
+    font-family: "Segoe UI Semibold";
+    font-weight: bold;
+}
+""")
         self.reinforcementLabel.setObjectName("reinforcementLabel")
         self.statusLayout.addWidget(self.reinforcementLabel)
 
         self.statusHintLabel = QtWidgets.QLabel(parent=self.statusGroupBox)
         self.statusHintLabel.setWordWrap(True)
-        self.statusHintLabel.setStyleSheet("color: #b7c7b7; font-size: 13px;")
+        self.statusHintLabel.setStyleSheet("""
+QLabel {
+    background-color: rgba(255, 255, 255, 0.025);
+    border: 1px solid rgba(255, 255, 255, 0.065);
+    border-radius: 11px;
+    padding: 10px;
+    color: #c7d3c7;
+    font-size: 13px;
+}
+""")
         self.statusHintLabel.setObjectName("statusHintLabel")
         self.statusLayout.addWidget(self.statusHintLabel)
 
@@ -1029,12 +1082,12 @@ QFrame#diceFrame {
         self.legendLayout.setObjectName("legendLayout")
 
         self.p1LegendLabel = QtWidgets.QLabel(parent=self.legendFrame)
-        self.p1LegendLabel.setStyleSheet("color: #ff4747; font-weight: bold;")
+        self.p1LegendLabel.setStyleSheet("color: #ff4747; font-weight: bold; font-size: 15px; padding: 4px;")
         self.p1LegendLabel.setObjectName("p1LegendLabel")
         self.legendLayout.addWidget(self.p1LegendLabel)
 
         self.p2LegendLabel = QtWidgets.QLabel(parent=self.legendFrame)
-        self.p2LegendLabel.setStyleSheet("color: #4f7bff; font-weight: bold;")
+        self.p2LegendLabel.setStyleSheet("color: #4f7bff; font-weight: bold; font-size: 15px; padding: 4px;")
         self.p2LegendLabel.setObjectName("p2LegendLabel")
         self.legendLayout.addWidget(self.p2LegendLabel)
 
@@ -1044,7 +1097,7 @@ QFrame#diceFrame {
         # MAP PANEL
         self.mapFrame = QtWidgets.QFrame(parent=self.centralwidget)
         self.mapFrame.setObjectName("mapFrame")
-        self.mapFrame.setMinimumSize(QtCore.QSize(840, 560))
+        self.mapFrame.setMinimumSize(QtCore.QSize(850, 520))
 
         self.mapFrameLayout = QtWidgets.QVBoxLayout(self.mapFrame)
         self.mapFrameLayout.setContentsMargins(0, 0, 0, 0)
@@ -1080,8 +1133,8 @@ QFrame#diceFrame {
 
         # RIGHT COMMAND PANEL
         self.attackGroupBox = QtWidgets.QGroupBox(parent=self.centralwidget)
-        self.attackGroupBox.setMinimumSize(QtCore.QSize(310, 0))
-        self.attackGroupBox.setMaximumWidth(340)
+        self.attackGroupBox.setMinimumSize(QtCore.QSize(330, 0))
+        self.attackGroupBox.setMaximumWidth(360)
         self.attackGroupBox.setObjectName("attackGroupBox")
 
         self.attackLayout = QtWidgets.QVBoxLayout(self.attackGroupBox)
@@ -1090,43 +1143,80 @@ QFrame#diceFrame {
         self.attackLayout.setObjectName("attackLayout")
 
         self.attackerLabel = QtWidgets.QLabel(parent=self.attackGroupBox)
+        self.attackerLabel.setStyleSheet("""
+QLabel {
+    background-color: rgba(120, 25, 25, 0.20);
+    border: 1px solid rgba(255, 90, 90, 0.30);
+    border-radius: 11px;
+    padding: 10px;
+    color: #ffe7e7;
+    font-size: 15px;
+    font-family: "Segoe UI Semibold";
+}
+""")
         self.attackerLabel.setObjectName("attackerLabel")
         self.attackLayout.addWidget(self.attackerLabel)
 
         self.defenderLabel = QtWidgets.QLabel(parent=self.attackGroupBox)
+        self.defenderLabel.setStyleSheet("""
+QLabel {
+    background-color: rgba(35, 55, 120, 0.20);
+    border: 1px solid rgba(120, 160, 255, 0.30);
+    border-radius: 11px;
+    padding: 10px;
+    color: #e8eeff;
+    font-size: 15px;
+    font-family: "Segoe UI Semibold";
+}
+""")
         self.defenderLabel.setObjectName("defenderLabel")
         self.attackLayout.addWidget(self.defenderLabel)
 
         self.commandHintLabel = QtWidgets.QLabel(parent=self.attackGroupBox)
         self.commandHintLabel.setWordWrap(True)
-        self.commandHintLabel.setStyleSheet("color: #b7c7b7; font-size: 13px;")
+        self.commandHintLabel.setStyleSheet("""
+QLabel {
+    background-color: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.07);
+    border-radius: 11px;
+    padding: 10px;
+    color: #cfd8cf;
+    font-size: 13px;
+}
+""")
         self.commandHintLabel.setObjectName("commandHintLabel")
         self.attackLayout.addWidget(self.commandHintLabel)
 
         self.territoryList = QtWidgets.QListWidget(parent=self.attackGroupBox)
         self.territoryList.setObjectName("territoryList")
-        self.territoryList.setMinimumHeight(280)
+        self.territoryList.setMinimumHeight(210)
         self.territoryList.setStyleSheet("""
-        QListWidget {
-            background-color: rgba(0, 0, 0, 0.22);
-            border: 1px solid #36413f;
-            border-radius: 10px;
-            color: #f0f0f0;
-            font-size: 12px;
-            padding: 8px;
-        }
+QListWidget {
+    background-color: rgba(0, 0, 0, 0.30);
+    border: 1px solid rgba(214, 175, 91, 0.28);
+    border-radius: 13px;
+    color: #f2f2f2;
+    font-size: 13px;
+    padding: 9px;
+    outline: none;
+}
 
-        QListWidget::item {
-            padding: 7px;
-            margin: 2px;
-            border-radius: 6px;
-        }
+QListWidget::item {
+    padding: 9px;
+    margin: 3px;
+    border-radius: 8px;
+}
 
-        QListWidget::item:selected {
-            background-color: #d4b067;
-            color: #111;
-        }
-        """)
+QListWidget::item:hover {
+    background-color: rgba(214, 175, 91, 0.14);
+}
+
+QListWidget::item:selected {
+    background-color: #d6af5b;
+    color: #0a0a0a;
+    font-weight: bold;
+}
+""")
         self.attackLayout.addWidget(self.territoryList)
 
         self.diceFrame = QtWidgets.QFrame(parent=self.attackGroupBox)
@@ -1139,7 +1229,18 @@ QFrame#diceFrame {
         self.diceLayout.setObjectName("diceLayout")
 
         self.diceInfoLabel = QtWidgets.QLabel(parent=self.diceFrame)
-        self.diceInfoLabel.setStyleSheet("color: #d8d8d8; font-size: 13px;")
+        self.diceInfoLabel.setStyleSheet("""
+QLabel {
+    background-color: rgba(0, 0, 0, 0.22);
+    border: 1px solid rgba(214, 175, 91, 0.24);
+    border-radius: 11px;
+    padding: 12px;
+    color: #f0e7c8;
+    font-size: 14px;
+    font-family: "Segoe UI Semibold";
+}
+""")
+        self.diceInfoLabel.setWordWrap(True)
         self.diceInfoLabel.setObjectName("diceInfoLabel")
         self.diceLayout.addWidget(self.diceInfoLabel)
 
@@ -1155,11 +1256,26 @@ QFrame#diceFrame {
 
         # BOTTOM AREA
         self.bottomLayout = QtWidgets.QHBoxLayout()
-        self.bottomLayout.setSpacing(12)
+        self.bottomLayout.setSpacing(8)
         self.bottomLayout.setObjectName("bottomLayout")
 
         self.resultLabel = QtWidgets.QLabel(parent=self.centralwidget)
-        self.resultLabel.setMinimumSize(QtCore.QSize(0, 90))
+        self.resultLabel.setMinimumSize(QtCore.QSize(0, 74))
+        self.resultLabel.setStyleSheet("""
+QLabel {
+    background-color: rgba(2, 6, 4, 248);
+    border: 1px solid rgba(214, 175, 91, 0.30);
+    border-radius: 13px;
+    padding: 16px;
+    color: #bde7bd;
+    font-family: "Consolas";
+    font-size: 15px;
+}
+""")
+        self.resultLabel.setWordWrap(True)
+        self.resultLabel.setAlignment(
+            QtCore.Qt.AlignmentFlag.AlignLeft | QtCore.Qt.AlignmentFlag.AlignVCenter
+        )
         self.resultLabel.setObjectName("resultLabel")
         self.bottomLayout.addWidget(self.resultLabel)
 
@@ -1168,22 +1284,78 @@ QFrame#diceFrame {
         self.buttonLayout.setObjectName("buttonLayout")
 
         self.attackButton = QtWidgets.QPushButton(parent=self.centralwidget)
-        self.attackButton.setMinimumSize(QtCore.QSize(260,44))
-        self.attackButton.setStyleSheet(
-            "background-color: #7a1111; "
-            "border: 1px solid #ff4d4d; "
-            "font-size: 17px;"
-        )
+        self.attackButton.setMinimumSize(QtCore.QSize(220, 42))
+        self.attackButton.setStyleSheet("""
+QPushButton {
+    background-color: qlineargradient(
+        spread: pad,
+        x1: 0.5, y1: 0,
+        x2: 0.5, y2: 1,
+        stop: 0 #101611,
+        stop: 0.45 #090d09,
+        stop: 1 #050605
+    );
+    border: 1px solid #ff6666;
+    color: white;
+    border-radius: 13px;
+    font-size: 18px;
+    font-family: "Segoe UI Semibold";
+    padding: 12px;
+}
+
+QPushButton:hover {
+    background-color: #cf2d2d;
+    border: 1px solid #ff9b9b;
+}
+
+QPushButton:pressed {
+    background-color: #4b0606;
+}
+
+QPushButton:disabled {
+    background-color: #2a1414;
+    border: 1px solid #492424;
+    color: #8c7c7c;
+}
+""")
         self.attackButton.setObjectName("attackButton")
         self.buttonLayout.addWidget(self.attackButton)
 
+
         self.nextTurnButton = QtWidgets.QPushButton(parent=self.centralwidget)
-        self.nextTurnButton.setMinimumSize(QtCore.QSize(260, 44))
-        self.nextTurnButton.setStyleSheet(
-            "background-color: #0f5e1c; "
-            "border: 1px solid #45ff73; "
-            "font-size: 17px;"
-        )
+        self.nextTurnButton.setMinimumSize(QtCore.QSize(220, 42))
+        self.nextTurnButton.setStyleSheet("""
+QPushButton {
+    background-color: qlineargradient(
+        spread: pad,
+        x1: 0, y1: 0,
+        x2: 0, y2: 1,
+        stop: 0 #14a334,
+        stop: 1 #076019
+    );
+    border: 1px solid #6cff97;
+    color: white;
+    border-radius: 13px;
+    font-size: 18px;
+    font-family: "Segoe UI Semibold";
+    padding: 12px;
+}
+
+QPushButton:hover {
+    background-color: #1dc544;
+    border: 1px solid #9cffbc;
+}
+
+QPushButton:pressed {
+    background-color: #054814;
+}
+
+QPushButton:disabled {
+    background-color: #132217;
+    border: 1px solid #27432c;
+    color: #7c7c7c;
+}
+""")
         self.nextTurnButton.setObjectName("nextTurnButton")
         self.buttonLayout.addWidget(self.nextTurnButton)
 
@@ -1245,8 +1417,8 @@ QFrame#diceFrame {
             )
         )
 
-        self.p1LegendLabel.setText(_translate("MainWindow", "● P1: Red Division"))
-        self.p2LegendLabel.setText(_translate("MainWindow", "● P2: Blue Division"))
+        self.p1LegendLabel.setText(_translate("MainWindow", "● P1  Red Division"))
+        self.p2LegendLabel.setText(_translate("MainWindow", "● P2  Blue Division"))
 
         self.attackGroupBox.setTitle(_translate("MainWindow", "COMMAND CENTER"))
         self.attackerLabel.setText(_translate("MainWindow", "FROM: None"))
@@ -1259,9 +1431,9 @@ QFrame#diceFrame {
             )
         )
 
-        self.diceInfoLabel.setText(_translate("MainWindow", "Dice / Combat Info"))
+        self.diceInfoLabel.setText(_translate("MainWindow", "⚔ Dice / Combat Info"))
 
-        self.resultLabel.setText(_translate("MainWindow", "[SYSTEM]: Waiting for action..."))
+        self.resultLabel.setText(_translate("MainWindow", "[SYSTEM] Waiting for action..."))
 
         self.attackButton.setText(_translate("MainWindow", "SALDIR"))
         self.nextTurnButton.setText(_translate("MainWindow", "TURU BİTİR"))
