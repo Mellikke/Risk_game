@@ -20,8 +20,6 @@ class WorldMapWidget(QtWidgets.QWidget):
         blue = QtGui.QColor("#2d6df6")
         red = QtGui.QColor("#d7262d")
 
-        # SADECE TEK HARİTA SETİ VAR.
-        # Farklı renkli eski ikinci harita tamamen kaldırıldı.
         self.territories = [
     # NORTH AMERICA
     {
