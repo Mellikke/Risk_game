@@ -1,4 +1,4 @@
-# Form implementation generated from reading ui file 'client\waiting_window.ui'
+# Form implementation generated from reading ui file 'client/waiting_window.ui'
 #
 # Created by: PyQt6 UI code generator 6.11.0
 #
@@ -42,7 +42,7 @@ class Ui_MainWindow(object):
         self.label_3 = QtWidgets.QLabel(parent=self.centralwidget)
         self.label_3.setGeometry(QtCore.QRect(0, 0, 800, 600))
         self.label_3.setText("")
-        self.label_3.setPixmap(QtGui.QPixmap("client\\../assets/waiting_room_background.jpg"))
+        self.label_3.setPixmap(QtGui.QPixmap("client/../assets/waiting_room_background.jpg"))
         self.label_3.setObjectName("label_3")
         self.statusLabel = QtWidgets.QLabel(parent=self.centralwidget)
         self.statusLabel.setGeometry(QtCore.QRect(220, 480, 571, 31))
@@ -75,13 +75,3 @@ class Ui_MainWindow(object):
         self.label.setText(_translate("MainWindow", "RİSK OYUNU"))
         self.playerInfoLabel.setText(_translate("MainWindow", "OYUNCU:"))
         self.statusLabel.setText(_translate("MainWindow", "Rakip oyuncunun bağlanması bekleniyor..."))
-
-
-if __name__ == "__main__":
-    import sys
-    app = QtWidgets.QApplication(sys.argv)
-    MainWindow = QtWidgets.QMainWindow()
-    ui = Ui_MainWindow()
-    ui.setupUi(MainWindow)
-    MainWindow.show()
-    sys.exit(app.exec())

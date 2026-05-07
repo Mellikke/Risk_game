@@ -1,12 +1,13 @@
 import sys
 import os
 import random
+import threading
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.append(BASE_DIR)
 
-from PyQt6.QtWidgets import QApplication, QMainWindow
 from PyQt6 import QtGui, QtWidgets, QtCore
+from PyQt6.QtWidgets import QApplication, QMainWindow
 
 from ui_game_window import Ui_MainWindow
 from game.game_engine import GameEngine
@@ -37,16 +38,6 @@ class TroopTransferDialog(QtWidgets.QDialog):
             QLabel#sectionLabel {
                 color: #d7c48a;
                 font-size: 13px;
-                font-weight: bold;
-            }
-
-            QLabel.infoBox {
-                background-color: #101d18;
-                border: 1px solid #3a4b43;
-                border-radius: 10px;
-                padding: 10px;
-                color: white;
-                font-size: 14px;
                 font-weight: bold;
             }
 
@@ -122,16 +113,6 @@ class TroopTransferDialog(QtWidgets.QDialog):
                 font-weight: bold;
             }
 
-            QToolButton#arrowButton:hover {
-                background-color: #244234;
-                color: #38ff8c;
-                border: 1px solid #42d98c;
-            }
-
-            QToolButton#arrowButton:pressed {
-                background-color: #2a5d47;
-            }
-
             QPushButton {
                 border-radius: 10px;
                 padding: 10px 16px;
@@ -145,18 +126,10 @@ class TroopTransferDialog(QtWidgets.QDialog):
                 border: 1px solid #aa4444;
             }
 
-            QPushButton#cancelButton:hover {
-                background-color: #522525;
-            }
-
             QPushButton#confirmButton {
                 background-color: #0f7d2c;
                 color: white;
                 border: 1px solid #25d366;
-            }
-
-            QPushButton#confirmButton:hover {
-                background-color: #14963a;
             }
         """)
 
@@ -218,9 +191,6 @@ class TroopTransferDialog(QtWidgets.QDialog):
         self.spinbox.setValue(1)
         self.spinbox.setFixedSize(76, 48)
         self.spinbox.setAlignment(QtCore.Qt.AlignmentFlag.AlignCenter)
-
-        # Native spinbox okları tema yüzünden görünmediği için kapatıyoruz.
-        # Sağ tarafa görsel olarak net ▲ / ▼ butonları ekliyoruz.
         self.spinbox.setButtonSymbols(QtWidgets.QAbstractSpinBox.ButtonSymbols.NoButtons)
 
         arrow_layout = QtWidgets.QVBoxLayout()
@@ -303,6 +273,8 @@ class TroopTransferDialog(QtWidgets.QDialog):
 
 
 class RiskGameWindow(QMainWindow):
+    server_message_signal = QtCore.pyqtSignal(str)
+
     def __init__(self, player_name=None, player_role=None, network_client=None):
         super().__init__()
 
@@ -318,8 +290,6 @@ class RiskGameWindow(QMainWindow):
 
         self.attacker_territory = None
         self.defender_territory = None
-
-        # Fortify / asker aktarımı için seçimler
         self.fortify_from = None
         self.fortify_to = None
         self.fortify_done = False
@@ -330,8 +300,14 @@ class RiskGameWindow(QMainWindow):
         self.ui.attackButton.clicked.connect(self.attack)
         self.ui.territoryList.itemClicked.connect(self.select_territory_from_list)
 
+        self.server_message_signal.connect(self.process_server_message)
+
         self.connect_map_controls()
         self.update_screen()
+
+        if self.network_client is not None:
+            self.start_server_listener()
+            self.update_turn_lock()
 
     def connect_map_controls(self):
         if hasattr(self.ui, "worldMapWidget"):
@@ -354,6 +330,7 @@ class RiskGameWindow(QMainWindow):
         for button_name, territory_name in button_connections.items():
             if hasattr(self.ui, button_name):
                 button = getattr(self.ui, button_name)
+
                 try:
                     button.clicked.disconnect()
                 except TypeError:
@@ -393,14 +370,18 @@ class RiskGameWindow(QMainWindow):
         self.ui.currentPlayerLabel.setText(f"Sıradaki Oyuncu: {current_player.name}")
         self.ui.phaseLabel.setText(f"Aşama: {self.phase}")
         self.ui.reinforcementLabel.setText(
-            f"Takviye Asker: {current_player.reinforcements}"
+            f"Konumlandırılacak Asker: {current_player.reinforcements}"
         )
 
         self.ui.territoryList.clear()
 
         for territory in self.game.game_map.territories.values():
+            owner_short = "None"
+
+            if territory.owner:
+                owner_short = "P1" if territory.owner.name == "Player 1" else "P2"
+
             display_name = self.display_territory_name(territory.name)
-            owner_short = "P1" if territory.owner.name == "Player 1" else "P2"
 
             self.ui.territoryList.addItem(
                 f"{display_name}  |  {owner_short}  |  {territory.armies}"
@@ -413,6 +394,9 @@ class RiskGameWindow(QMainWindow):
             self.ui.worldMapWidget.update()
 
         self.update_action_panel()
+
+        if self.network_client is not None:
+            self.update_turn_lock()
 
     def update_action_panel(self):
         current_player = self.game.get_current_player()
@@ -429,10 +413,14 @@ class RiskGameWindow(QMainWindow):
 
         self.ui.attackButton.setEnabled(can_attack)
 
+        if self.network_client is not None and self.player_role != current_player.name:
+            self.ui.attackButton.setEnabled(False)
+            return
+
         if self.phase == "reinforcement":
             self.ui.diceInfoLabel.setText(
-                "Reinforcement Phase\n"
-                "Kendi bölgene takviye asker yerleştir."
+                "Konumlandırma Aşaması\n"
+                "Kendi bölgene asker yerleştir."
             )
             return
 
@@ -458,7 +446,6 @@ class RiskGameWindow(QMainWindow):
                     f"({self.fortify_from.armies})\n"
                     "Hedef olarak kendi komşu bölgeni seç."
                 )
-
             return
 
         if self.attacker_territory is None:
@@ -477,12 +464,12 @@ class RiskGameWindow(QMainWindow):
                 if n.owner != current_player
             ]
 
+            neighbor_text = "Saldırılabilir komşu yok."
+
             if neighbors:
                 neighbor_text = ", ".join(neighbors[:4])
                 if len(neighbors) > 4:
                     neighbor_text += "..."
-            else:
-                neighbor_text = "Saldırılabilir komşu yok."
 
             self.ui.diceInfoLabel.setText(
                 f"FROM: {attacker_name} ({self.attacker_territory.armies})\n"
@@ -492,23 +479,15 @@ class RiskGameWindow(QMainWindow):
 
         defender_name = self.display_territory_name(self.defender_territory.name)
 
-        overpower_limit = self.defender_territory.armies * 3 + 1
-        can_overpower = self.attacker_territory.armies >= overpower_limit
-
         chance = self.estimate_conquest_chance(
             self.attacker_territory.armies,
             self.defender_territory.armies
         )
 
-        if can_overpower:
-            chance_line = "Direkt ele geçirme: MÜMKÜN"
-        else:
-            chance_line = f"Ele geçirme ihtimali: %{chance}"
-
         self.ui.diceInfoLabel.setText(
             f"FROM: {attacker_name} ({self.attacker_territory.armies})\n"
             f"TARGET: {defender_name} ({self.defender_territory.armies})\n"
-            f"{chance_line}\n"
+            f"Ele geçirme ihtimali: %{chance}\n"
             "Saldırıya hazır."
         )
 
@@ -520,13 +499,15 @@ class RiskGameWindow(QMainWindow):
 
         for item in self.ui.worldMapWidget.territories:
             if item["name"] == display_name or item["name"] == territory.name:
-                item["owner"] = territory.owner.name
+                item["owner"] = territory.owner.name if territory.owner else "None"
                 item["armies"] = territory.armies
 
-                if territory.owner.name == "Player 1":
+                if territory.owner and territory.owner.name == "Player 1":
                     item["color"] = QtGui.QColor("#d7262d")
-                else:
+                elif territory.owner and territory.owner.name == "Player 2":
                     item["color"] = QtGui.QColor("#2d6df6")
+                else:
+                    item["color"] = QtGui.QColor("#555555")
 
                 break
 
@@ -546,11 +527,14 @@ class RiskGameWindow(QMainWindow):
             return
 
         button = getattr(self.ui, button_name)
+
+        owner_name = territory.owner.name if territory.owner else "None"
+
         button.setText(
-            f"{territory.name}\n{territory.owner.name} - {territory.armies}"
+            f"{self.display_territory_name(territory.name)}\n{owner_name} - {territory.armies}"
         )
 
-        if territory.owner.name == "Player 1":
+        if owner_name == "Player 1":
             button.setStyleSheet("""
                 QPushButton {
                     background-color: #b91c1c;
@@ -559,7 +543,7 @@ class RiskGameWindow(QMainWindow):
                     font-weight: bold;
                 }
             """)
-        else:
+        elif owner_name == "Player 2":
             button.setStyleSheet("""
                 QPushButton {
                     background-color: #1d4ed8;
@@ -568,9 +552,36 @@ class RiskGameWindow(QMainWindow):
                     font-weight: bold;
                 }
             """)
+        else:
+            button.setStyleSheet("""
+                QPushButton {
+                    background-color: #555555;
+                    color: white;
+                    border-radius: 12px;
+                    font-weight: bold;
+                }
+            """)
 
     def next_turn(self):
-        # Attack aşamasında TURU BİTİR'e basınca önce Fortify aşamasına geç.
+        if self.network_client is not None:
+            self.network_client.send_message("NEXT_PHASE")
+            return
+
+        current_player = self.game.get_current_player()
+
+        if self.phase == "reinforcement":
+            if current_player.reinforcements > 0:
+                self.ui.resultLabel.setText(
+                    f"Result: Konumlandırma zorunlu.\n"
+                    f"Kalan asker: {current_player.reinforcements}"
+                )
+                return
+
+            self.phase = "attack"
+            self.ui.resultLabel.setText("Result: Savaş aşamasına geçildi.")
+            self.update_screen()
+            return
+
         if self.phase == "attack":
             self.phase = "fortify"
 
@@ -582,35 +593,39 @@ class RiskGameWindow(QMainWindow):
 
             self.ui.attackerLabel.setText("FROM: None")
             self.ui.defenderLabel.setText("TARGET: None")
+
             self.ui.resultLabel.setText(
-                "Result: Takviye aşamasına geçildi.\n"
-                "Asker aktarmak için önce kaynak bölgeyi, sonra hedef bölgeyi seç."
+                "Result: Takviye / asker aktarma aşamasına geçildi."
             )
 
             self.update_screen()
             return
 
-        # Fortify aşamasında veya reinforcement dışındaki durumlarda gerçekten sırayı değiştir.
-        self.game.next_turn()
-        self.game.start_turn()
+        if self.phase == "fortify":
+            self.game.next_turn()
+            self.game.start_turn()
 
-        self.phase = "reinforcement"
+            self.phase = "reinforcement"
 
-        self.attacker_territory = None
-        self.defender_territory = None
-        self.fortify_from = None
-        self.fortify_to = None
-        self.fortify_done = False
+            self.attacker_territory = None
+            self.defender_territory = None
+            self.fortify_from = None
+            self.fortify_to = None
+            self.fortify_done = False
 
-        self.ui.attackerLabel.setText("FROM: None")
-        self.ui.defenderLabel.setText("TARGET: None")
-        self.ui.resultLabel.setText("Result: Yeni tur başladı, asker yerleştir.")
+            self.ui.attackerLabel.setText("FROM: None")
+            self.ui.defenderLabel.setText("TARGET: None")
 
-        self.update_screen()
+            self.ui.resultLabel.setText(
+                "Result: Tur bitti. Sıra diğer oyuncuya geçti."
+            )
+
+            self.update_screen()
+            return
 
     def select_territory_from_list(self, item):
         text = item.text()
-        territory_name = text.split(" | ")[0]
+        territory_name = text.split("|")[0].strip()
         territory_name = self.normalize_territory_name(territory_name)
         self.select_territory_by_name(territory_name)
 
@@ -629,6 +644,10 @@ class RiskGameWindow(QMainWindow):
 
         current_player = self.game.get_current_player()
 
+        if self.network_client is not None and self.player_role != current_player.name:
+            self.ui.resultLabel.setText("Result: Sıra sende değil.")
+            return
+
         if self.phase == "reinforcement":
             self.handle_reinforcement_selection(selected, current_player)
             return
@@ -642,26 +661,32 @@ class RiskGameWindow(QMainWindow):
             return
 
     def handle_reinforcement_selection(self, selected, current_player):
+        if self.network_client is not None:
+            self.network_client.send_message(f"PLACE_ARMY|{selected.name}")
+            return
+
         if selected.owner != current_player:
-            self.ui.resultLabel.setText("Result: Sadece kendi bölgene asker koyabilirsin.")
+            self.ui.resultLabel.setText(
+                "Result: Konumlandırma aşamasında sadece kendi bölgene asker koyabilirsin."
+            )
             return
 
         if current_player.reinforcements <= 0:
             self.phase = "attack"
-            self.ui.resultLabel.setText("Result: Takviye bitti, saldırı aşamasına geçildi.")
+            self.ui.resultLabel.setText("Result: Savaş aşamasına geçildi.")
             self.update_screen()
             return
 
         selected.add_armies(1)
         current_player.reinforcements -= 1
 
-        self.ui.resultLabel.setText(
-            f"Result: {self.display_territory_name(selected.name)} bölgesine 1 asker eklendi."
-        )
-
         if current_player.reinforcements == 0:
             self.phase = "attack"
-            self.ui.resultLabel.setText("Result: Takviye bitti, saldırı aşamasına geçildi.")
+            self.ui.resultLabel.setText("Result: Savaş aşamasına geçildi.")
+        else:
+            self.ui.resultLabel.setText(
+                f"Result: {self.display_territory_name(selected.name)} bölgesine 1 asker yerleştirildi."
+            )
 
         self.update_screen()
 
@@ -691,7 +716,9 @@ class RiskGameWindow(QMainWindow):
             return
 
         if self.attacker_territory is None:
-            self.ui.resultLabel.setText("Result: Önce kendi bölgelerinden saldıran bir bölge seçmelisin.")
+            self.ui.resultLabel.setText(
+                "Result: Önce kendi bölgelerinden saldıran bir bölge seçmelisin."
+            )
             self.update_action_panel()
             return
 
@@ -715,13 +742,6 @@ class RiskGameWindow(QMainWindow):
         self.update_action_panel()
 
     def handle_fortify_selection(self, selected, current_player):
-        if self.fortify_done:
-            self.ui.resultLabel.setText(
-                "Result: Bu turda asker aktarımı zaten yapıldı. TURU BİTİR diyebilirsin."
-            )
-            self.update_action_panel()
-            return
-
         if selected.owner != current_player:
             self.ui.resultLabel.setText(
                 "Result: Sadece kendi bölgelerin arasında asker aktarabilirsin."
@@ -729,7 +749,13 @@ class RiskGameWindow(QMainWindow):
             self.update_action_panel()
             return
 
-        # 1) Kaynak bölge seçimi
+        if self.fortify_done:
+            self.ui.resultLabel.setText(
+                "Result: Bu turda asker aktarımı zaten yapıldı. TURU BİTİR diyebilirsin."
+            )
+            self.update_action_panel()
+            return
+
         if self.fortify_from is None:
             if selected.armies < 2:
                 self.ui.resultLabel.setText(
@@ -745,34 +771,42 @@ class RiskGameWindow(QMainWindow):
             )
             self.ui.defenderLabel.setText("TARGET: None")
             self.ui.resultLabel.setText(
-                f"Result: Kaynak bölge seçildi: {self.display_territory_name(selected.name)}.\n"
-                "Şimdi hedef olarak kendi komşu bölgeni seç."
+                f"Result: Kaynak bölge seçildi: {self.display_territory_name(selected.name)}."
             )
 
             self.update_action_panel()
             return
 
-        # 2) Hedef bölge kontrolleri
         if selected == self.fortify_from:
-            self.ui.resultLabel.setText("Result: Hedef olarak farklı bir bölge seçmelisin.")
-            self.update_action_panel()
-            return
+            self.ui.resultLabel.setText(
+                "Result: Hedef olarak farklı bir bölge seçmelisin.\n"
+                "Kaynak seçimi sıfırlandı. Yeniden kaynak bölge seç."
+            )
 
-        if selected.owner != current_player:
-            self.ui.resultLabel.setText("Result: Hedef bölge de sana ait olmalı.")
+            self.fortify_from = None
+            self.fortify_to = None
+
+            self.ui.attackerLabel.setText("FROM: None")
+            self.ui.defenderLabel.setText("TARGET: None")
+
             self.update_action_panel()
             return
 
         if selected not in self.fortify_from.neighbors:
             self.ui.resultLabel.setText(
-                f"Result: {self.display_territory_name(self.fortify_from.name)} ile "
-                f"{self.display_territory_name(selected.name)} komşu değil. Asker aktarılamaz."
+                "Result: Asker aktarımı için bölgeler komşu olmalı.\n"
+                "Kaynak seçimi sıfırlandı. Yeniden kaynak bölge seç."
             )
+
+            self.fortify_from = None
+            self.fortify_to = None
+
+            self.ui.attackerLabel.setText("FROM: None")
+            self.ui.defenderLabel.setText("TARGET: None")
+
             self.update_action_panel()
             return
 
-        # 3) Kaç asker aktarılacağını kullanıcı özel oyun penceresinden seçsin.
-        # Kaynak bölgede en az 1 asker kalmak zorundadır.
         max_movable = self.fortify_from.armies - 1
 
         from_name = self.display_territory_name(self.fortify_from.name)
@@ -792,7 +826,15 @@ class RiskGameWindow(QMainWindow):
 
         moving_armies = dialog.selected_amount()
 
-        # 4) Aktarım işlemi
+        if self.network_client is not None:
+            self.network_client.send_message(
+                f"FORTIFY|{self.fortify_from.name}|{selected.name}|{moving_armies}"
+            )
+            self.fortify_from = None
+            self.fortify_to = None
+            self.ui.resultLabel.setText("Result: Asker aktarımı server'a gönderildi.")
+            return
+
         self.fortify_from.remove_armies(moving_armies)
         selected.add_armies(moving_armies)
 
@@ -804,8 +846,7 @@ class RiskGameWindow(QMainWindow):
 
         self.ui.resultLabel.setText(
             f"Result: {moving_armies} asker {from_name} bölgesinden "
-            f"{to_name} bölgesine aktarıldı.\n"
-            "Şimdi TURU BİTİR diyebilirsin."
+            f"{to_name} bölgesine aktarıldı."
         )
 
         self.fortify_from = None
@@ -840,7 +881,7 @@ class RiskGameWindow(QMainWindow):
 
         return attack_rolls, defend_rolls, attacker_losses, defender_losses
 
-    def estimate_conquest_chance(self, attacker_armies, defender_armies, simulations=700):
+    def estimate_conquest_chance(self, attacker_armies, defender_armies, simulations=300):
         if attacker_armies < 2 or defender_armies <= 0:
             return 0.0
 
@@ -881,10 +922,26 @@ class RiskGameWindow(QMainWindow):
         return round((wins / simulations) * 100, 1)
 
     def attack(self):
+        if self.network_client is not None:
+            if self.phase != "attack":
+                self.ui.resultLabel.setText("Result: Şu anda savaş aşamasında değilsin.")
+                return
+
+            if self.attacker_territory is None or self.defender_territory is None:
+                self.ui.resultLabel.setText("Result: Önce FROM ve TARGET seç.")
+                return
+
+            self.network_client.send_message(
+                f"ATTACK|{self.attacker_territory.name}|{self.defender_territory.name}"
+            )
+
+            self.ui.resultLabel.setText("Result: Saldırı server'a gönderildi.")
+            return
+
         current_player = self.game.get_current_player()
 
         if self.phase != "attack":
-            self.ui.resultLabel.setText("Result: Önce takviye askerlerini yerleştirmelisin.")
+            self.ui.resultLabel.setText("Result: Önce konumlandırma aşamasını tamamlamalısın.")
             self.update_action_panel()
             return
 
@@ -919,65 +976,6 @@ class RiskGameWindow(QMainWindow):
         attacker_name = self.display_territory_name(self.attacker_territory.name)
         defender_name = self.display_territory_name(self.defender_territory.name)
 
-        chance_before_attack = self.estimate_conquest_chance(
-            self.attacker_territory.armies,
-            self.defender_territory.armies
-        )
-
-        # Güç farkı çok fazlaysa zar atmadan direkt ele geçirme.
-        # Örnek: 10 asker, 2 askerli bölgeye saldırırsa 10 >= 2*3+1 olduğu için direkt alır.
-        old_defender_armies = self.defender_territory.armies
-        overpower_limit = old_defender_armies * 3 + 1
-
-        if self.attacker_territory.armies >= overpower_limit:
-            old_owner = self.defender_territory.owner
-
-            old_owner.remove_territory(self.defender_territory)
-
-            self.defender_territory.set_owner(current_player)
-            current_player.add_territory(self.defender_territory)
-
-            moving_armies = min(
-                old_defender_armies + 1,
-                self.attacker_territory.armies - 1
-            )
-            moving_armies = max(1, moving_armies)
-
-            original_attacker_armies = self.attacker_territory.armies
-
-            self.defender_territory.armies = moving_armies
-            self.attacker_territory.remove_armies(moving_armies)
-
-            self.ui.diceInfoLabel.setText(
-                f"Overpower Attack\n"
-                f"FROM: {attacker_name} ({original_attacker_armies})\n"
-                f"TARGET: {defender_name} ({old_defender_armies})\n"
-                f"Sonuç: Direkt ele geçirildi."
-            )
-
-            self.ui.resultLabel.setText(
-                f"Result: {attacker_name} → {defender_name}\n"
-                f"Güç üstünlüğüyle direkt ele geçirildi. "
-                f"{moving_armies} asker aktarıldı."
-            )
-
-            self.attacker_territory = None
-            self.defender_territory = None
-
-            self.ui.attackerLabel.setText("FROM: None")
-            self.ui.defenderLabel.setText("TARGET: None")
-
-            winner = self.game.check_winner()
-
-            if winner:
-                self.ui.resultLabel.setText(f"🎉 {winner.name} kazandı!")
-                self.ui.attackButton.setEnabled(False)
-                self.ui.nextTurnButton.setEnabled(False)
-                return
-
-            self.update_screen()
-            return
-
         attack_rolls, defend_rolls, attacker_losses, defender_losses = self.roll_risk_dice(
             self.attacker_territory.armies,
             self.defender_territory.armies
@@ -990,7 +988,6 @@ class RiskGameWindow(QMainWindow):
             f"Dice Roll\n"
             f"Attack: {attack_rolls}\n"
             f"Defense: {defend_rolls}\n"
-            f"Chance: %{chance_before_attack}\n"
             f"Loss → A-{attacker_losses}, D-{defender_losses}"
         )
 
@@ -1000,10 +997,11 @@ class RiskGameWindow(QMainWindow):
             f"Kayıp: Saldıran-{attacker_losses}, Savunan-{defender_losses}"
         )
 
-        if self.defender_territory.armies == 0:
+        if self.defender_territory.armies <= 0:
             old_owner = self.defender_territory.owner
 
-            old_owner.remove_territory(self.defender_territory)
+            if old_owner:
+                old_owner.remove_territory(self.defender_territory)
 
             self.defender_territory.set_owner(current_player)
             current_player.add_territory(self.defender_territory)
@@ -1016,22 +1014,13 @@ class RiskGameWindow(QMainWindow):
 
             result_message = (
                 f"Result: {defender_name} ele geçirildi! "
-                f"{moving_armies} asker {attacker_name} bölgesinden aktarıldı. "
-                f"Saldırı öncesi ele geçirme ihtimali: %{chance_before_attack}."
+                f"{moving_armies} asker aktarıldı."
             )
 
-            self.attacker_territory = None
-            self.defender_territory = None
-            self.ui.attackerLabel.setText("FROM: None")
-            self.ui.defenderLabel.setText("TARGET: None")
-
-        else:
-            if self.attacker_territory.armies < 2:
-                result_message += "\n Saldıran bölgede yeterli asker kalmadı."
-                self.attacker_territory = None
-                self.defender_territory = None
-                self.ui.attackerLabel.setText("FROM: None")
-                self.ui.defenderLabel.setText("TARGET: None")
+        self.attacker_territory = None
+        self.defender_territory = None
+        self.ui.attackerLabel.setText("FROM: None")
+        self.ui.defenderLabel.setText("TARGET: None")
 
         self.ui.resultLabel.setText(result_message)
 
@@ -1044,6 +1033,150 @@ class RiskGameWindow(QMainWindow):
             return
 
         self.update_screen()
+
+    def start_server_listener(self):
+        thread = threading.Thread(target=self.listen_server_messages, daemon=True)
+        thread.start()
+
+    def listen_server_messages(self):
+        while True:
+            try:
+                message = self.network_client.receive_message()
+
+                if not message:
+                    break
+
+                print("Server mesajı:", message)
+                self.server_message_signal.emit(message)
+
+            except Exception as error:
+                print("Server dinleme hatası:", error)
+                break
+
+    def process_server_message(self, message):
+        if message.startswith("GAME_STATE|"):
+            self.handle_game_state(message)
+
+        elif message.startswith("ERROR|"):
+            error_text = message.split("|", 1)[1]
+            self.ui.resultLabel.setText(f"Result: {error_text}")
+
+            # Server "konumlandırma aşamasında değilsin" diyorsa,
+            # client eski phase'te kalmış olabilir. Buton/paneli mevcut phase'e göre yenile.
+            if "konumlandırma aşamasında değilsin" in error_text:
+                self.update_screen()
+
+        elif message.startswith("RESULT|"):
+            result_text = message.split("|", 1)[1]
+            self.ui.resultLabel.setText(f"Result: {result_text}")
+
+        elif message.startswith("GAME_START|"):
+            self.ui.resultLabel.setText("Result: Oyun başladı.")
+
+        elif message.startswith("MESSAGE|"):
+            self.ui.resultLabel.setText(message)
+
+    def handle_game_state(self, message):
+        parts = message.split("|")
+        state_data = {}
+
+        for part in parts[1:]:
+            if "=" in part:
+                key, value = part.split("=", 1)
+                state_data[key] = value
+
+        current_player_name = state_data.get("current_player")
+        server_phase = state_data.get("phase")
+        reinforcements = state_data.get("reinforcements")
+        territories_text = state_data.get("territories", "")
+
+        if server_phase:
+            self.phase = server_phase
+
+        for player in self.game.players:
+            player.territories.clear()
+
+        territory_items = territories_text.split(";")
+
+        for item in territory_items:
+            if not item:
+                continue
+
+            try:
+                territory_name, owner_name, armies_text = item.split(",", 2)
+            except ValueError:
+                continue
+
+            territory = self.game.game_map.get_territory(territory_name)
+
+            if territory is None:
+                continue
+
+            owner_player = None
+
+            for player in self.game.players:
+                if player.name == owner_name:
+                    owner_player = player
+                    break
+
+            territory.owner = owner_player
+
+            if owner_player is not None:
+                owner_player.add_territory(territory)
+
+            try:
+                territory.armies = int(armies_text)
+            except ValueError:
+                territory.armies = 0
+
+        for index, player in enumerate(self.game.players):
+            if player.name == current_player_name:
+                self.game.current_player_index = index
+                break
+
+        current_player = self.game.get_current_player()
+
+        if reinforcements is not None:
+            try:
+                current_player.reinforcements = int(reinforcements)
+            except ValueError:
+                pass
+
+        self.attacker_territory = None
+        self.defender_territory = None
+
+        if self.phase != "fortify":
+            self.fortify_from = None
+            self.fortify_to = None
+            self.fortify_done = False
+
+        self.ui.attackerLabel.setText("FROM: None")
+        self.ui.defenderLabel.setText("TARGET: None")
+
+        self.update_screen()
+        self.update_turn_lock()
+
+    def update_turn_lock(self):
+        if not self.player_role:
+            return
+
+        current_player = self.game.get_current_player()
+        is_my_turn = self.player_role == current_player.name
+
+        self.ui.nextTurnButton.setEnabled(is_my_turn)
+        self.ui.territoryList.setEnabled(is_my_turn)
+
+        if hasattr(self.ui, "worldMapWidget"):
+            self.ui.worldMapWidget.setEnabled(is_my_turn)
+
+        if not is_my_turn:
+            self.ui.attackButton.setEnabled(False)
+            self.ui.resultLabel.setText(
+                f"Result: Sıra {current_player.name} oyuncusunda. Bekle."
+            )
+            return
+
+        self.update_action_panel()
 
 
 game_window = RiskGameWindow

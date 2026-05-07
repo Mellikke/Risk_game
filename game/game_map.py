@@ -77,7 +77,7 @@ class GameMap:
             "Siam",
             "Çin",
 
-            # AUSTRALIA
+            # AUSTRALIA / OCEANIA
             "Endonezya",
             "Yeni Gine",
             "Batı Avustralya",
@@ -93,12 +93,13 @@ class GameMap:
             # =========================
             ("Alaska", "Kuzeybatı Toprakları"),
             ("Alaska", "Alberta"),
-            ("Alaska", "Kamçatka"),  # wrap-around / dünya yuvarlaklığı
+            ("Alaska", "Kamçatka"),
 
             ("Kuzeybatı Toprakları", "Alberta"),
             ("Kuzeybatı Toprakları", "Ontario"),
             ("Kuzeybatı Toprakları", "Grönland"),
 
+            ("Grönland", "Ontario"),
             ("Grönland", "Quebec"),
             ("Grönland", "İzlanda"),
 
@@ -116,9 +117,6 @@ class GameMap:
 
             ("Doğu ABD", "Orta Amerika"),
 
-            # Deniz bağlantısı
-            ("Doğu ABD", "Kuzey Afrika"),
-
             # =========================
             # SOUTH AMERICA
             # =========================
@@ -131,9 +129,7 @@ class GameMap:
             ("Peru", "Arjantin"),
 
             ("Brezilya", "Arjantin"),
-
-            # Deniz bağlantısı
-            ("Brezilya", "Güney Afrika"),
+            ("Brezilya", "Kuzey Afrika"),
 
             # =========================
             # EUROPE
@@ -141,8 +137,9 @@ class GameMap:
             ("İzlanda", "Büyük Britanya"),
             ("İzlanda", "İskandinavya"),
 
-            ("Büyük Britanya", "Batı Avrupa"),
+            ("Büyük Britanya", "İskandinavya"),
             ("Büyük Britanya", "Kuzey Avrupa"),
+            ("Büyük Britanya", "Batı Avrupa"),
 
             ("İskandinavya", "Kuzey Avrupa"),
             ("İskandinavya", "Ukrayna"),
@@ -163,31 +160,24 @@ class GameMap:
             ("Ukrayna", "Afganistan"),
             ("Ukrayna", "Orta Dogu"),
 
-            # Deniz bağlantısı
-            ("Quebec", "Büyük Britanya"),
-
             # =========================
             # AFRICA
             # =========================
             ("Kuzey Afrika", "Mısır"),
+            ("Kuzey Afrika", "Doğu Afrika"),
             ("Kuzey Afrika", "Kongo"),
-            ("Kuzey Afrika", "Güney Avrupa"),
-            ("Kuzey Afrika", "Batı Avrupa"),
 
-            ("Mısır", "Orta Dogu"),
             ("Mısır", "Doğu Afrika"),
-            ("Mısır", "Kongo"),
-
-            ("Kongo", "Doğu Afrika"),
-            ("Kongo", "Güney Afrika"),
+            ("Mısır", "Orta Dogu"),
 
             ("Doğu Afrika", "Orta Dogu"),
+            ("Doğu Afrika", "Kongo"),
             ("Doğu Afrika", "Güney Afrika"),
+            ("Doğu Afrika", "Madagaskar"),
+
+            ("Kongo", "Güney Afrika"),
 
             ("Güney Afrika", "Madagaskar"),
-
-            # Deniz bağlantısı
-            ("Doğu Afrika", "Madagaskar"),
 
             # =========================
             # ASIA
@@ -195,85 +185,47 @@ class GameMap:
             ("Ural", "Sibirya"),
             ("Ural", "Afganistan"),
             ("Ural", "Çin"),
-            ("Ural", "Ukrayna"),
 
             ("Sibirya", "Yakutsk"),
             ("Sibirya", "Irkutsk"),
-            ("Sibirya", "Ural"),
+            ("Sibirya", "Çin"),
 
-            ("Yakutsk", "Sibirya"),
             ("Yakutsk", "Irkutsk"),
             ("Yakutsk", "Kamçatka"),
 
-            ("Kamçatka", "Yakutsk"),
             ("Kamçatka", "Irkutsk"),
+            ("Kamçatka", "Moğolistan"),
             ("Kamçatka", "Japonya"),
-            ("Kamçatka", "Alaska"),
 
-            ("Irkutsk", "Sibirya"),
-            ("Irkutsk", "Yakutsk"),
-            ("Irkutsk", "Kamçatka"),
-            ("Irkutsk", "Japonya"),
             ("Irkutsk", "Moğolistan"),
 
-            ("Japonya", "Kamçatka"),
-            ("Japonya", "Irkutsk"),
-            ("Japonya", "Çin"),
+            ("Moğolistan", "Japonya"),
+            ("Moğolistan", "Çin"),
 
-            ("Afganistan", "Ukrayna"),
-            ("Afganistan", "Ural"),
             ("Afganistan", "Orta Dogu"),
             ("Afganistan", "Hindistan"),
             ("Afganistan", "Çin"),
-            ("Afganistan", "Moğolistan"),
 
-            ("Moğolistan", "Afganistan"),
-            ("Moğolistan", "Çin"),
-            ("Moğolistan", "Irkutsk"),
-
-            ("Çin", "Ural"),
-            ("Çin", "Afganistan"),
-            ("Çin", "Moğolistan"),
-            ("Çin", "Hindistan"),
-            ("Çin", "Siam"),
-            ("Çin", "Japonya"),
-
-            ("Orta Dogu", "Ukrayna"),
-            ("Orta Dogu", "Güney Avrupa"),
-            ("Orta Dogu", "Mısır"),
-            ("Orta Dogu", "Doğu Afrika"),
-            ("Orta Dogu", "Afganistan"),
             ("Orta Dogu", "Hindistan"),
 
-            ("Hindistan", "Orta Dogu"),
-            ("Hindistan", "Afganistan"),
             ("Hindistan", "Çin"),
             ("Hindistan", "Siam"),
 
-            ("Siam", "Hindistan"),
-            ("Siam", "Çin"),
-            ("Siam", "Endonezya"),
-
-            # Deniz bağlantısı
-            ("Siam", "Yeni Gine"),
+            ("Çin", "Siam"),
 
             # =========================
             # AUSTRALIA / OCEANIA
             # =========================
-            ("Endonezya", "Siam"),
+            ("Siam", "Endonezya"),
+
             ("Endonezya", "Yeni Gine"),
             ("Endonezya", "Batı Avustralya"),
 
-            ("Yeni Gine", "Endonezya"),
             ("Yeni Gine", "Batı Avustralya"),
             ("Yeni Gine", "Doğu Avustralya"),
 
-            ("Batı Avustralya", "Endonezya"),
-            ("Batı Avustralya", "Yeni Gine"),
             ("Batı Avustralya", "Doğu Avustralya"),
-
-            ("Doğu Avustralya", "Yeni Gine"),
-            ("Doğu Avustralya", "Batı Avustralya"),
         ]
+
         for territory1, territory2 in connections:
             self.add_connection(territory1, territory2)

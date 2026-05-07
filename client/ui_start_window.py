@@ -1,4 +1,4 @@
-# Form implementation generated from reading ui file 'client\start_window.ui'
+# Form implementation generated from reading ui file 'client/start_window.ui'
 #
 # Created by: PyQt6 UI code generator 6.11.0
 #
@@ -97,13 +97,13 @@ class Ui_MainWindow(object):
         self.zar_png = QtWidgets.QLabel(parent=self.centralwidget)
         self.zar_png.setGeometry(QtCore.QRect(550, 130, 341, 491))
         self.zar_png.setText("")
-        self.zar_png.setPixmap(QtGui.QPixmap("client\\../../../../../Downloads/zar.png"))
+        self.zar_png.setPixmap(QtGui.QPixmap("client/../../../../../Downloads/zar.png"))
         self.zar_png.setScaledContents(True)
         self.zar_png.setObjectName("zar_png")
         self.background_png = QtWidgets.QLabel(parent=self.centralwidget)
         self.background_png.setGeometry(QtCore.QRect(0, 0, 800, 600))
         self.background_png.setText("")
-        self.background_png.setPixmap(QtGui.QPixmap("client\\../assets/background.jpg"))
+        self.background_png.setPixmap(QtGui.QPixmap("client/../assets/background.jpg"))
         self.background_png.setScaledContents(True)
         self.background_png.setObjectName("background_png")
         self.background_png.raise_()
@@ -130,13 +130,3 @@ class Ui_MainWindow(object):
         self.titleLabel.setText(_translate("MainWindow", "RISK OYUNU"))
         self.label.setText(_translate("MainWindow", "OYUNCUNUN İSMİ"))
         self.connectButton.setText(_translate("MainWindow", "BAĞLAN"))
-
-
-if __name__ == "__main__":
-    import sys
-    app = QtWidgets.QApplication(sys.argv)
-    MainWindow = QtWidgets.QMainWindow()
-    ui = Ui_MainWindow()
-    ui.setupUi(MainWindow)
-    MainWindow.show()
-    sys.exit(app.exec())

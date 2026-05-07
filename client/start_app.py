@@ -35,12 +35,34 @@ class StartWindow(QMainWindow):
             print("Server Port:", SERVER_PORT)
             print("Server cevabı:", response)
 
-            player_role = "Unknown"
+            if response == "SERVER_FULL":
+                QMessageBox.warning(
+                    self,
+                    "Server Dolu",
+                    "Oyunda zaten iki oyuncu var. Bağlantı kurulamadı."
+                )
+                self.network_client.close()
+                return
 
-            if response.startswith("CONNECTED|"):
-                player_role = response.split("|")[1]
+            if not response or not response.startswith("CONNECTED|"):
+                QMessageBox.critical(
+                    self,
+                    "Bağlantı Hatası",
+                    f"Server beklenmeyen cevap verdi:\n{response}"
+                )
+                self.network_client.close()
+                return
 
-            self.waiting_window = WaitingWindow(player_name, player_role, self.network_client)
+            player_role = response.split("|", 1)[1].strip()
+
+            print("START_APP PLAYER NAME:", player_name)
+            print("START_APP PLAYER ROLE:", player_role)
+
+            self.waiting_window = WaitingWindow(
+                player_name,
+                player_role,
+                self.network_client
+            )
             self.waiting_window.show()
             self.close()
 

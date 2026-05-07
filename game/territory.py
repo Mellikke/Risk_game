@@ -8,7 +8,7 @@ class Territory:
     def add_neighbor(self, territory):
         if territory not in self.neighbors:
             self.neighbors.append(territory)
-
+            
     def set_owner(self, player):
         self.owner = player
 
