@@ -99,8 +99,8 @@ class GameMap:
             ("Kuzeybatı Toprakları", "Ontario"),
             ("Kuzeybatı Toprakları", "Grönland"),
 
-            ("Grönland", "Ontario"),
-            ("Grönland", "Quebec"),
+            #("Grönland", "Ontario"),
+            #("Grönland", "Quebec"),
             ("Grönland", "İzlanda"),
 
             ("Alberta", "Ontario"),
@@ -110,7 +110,8 @@ class GameMap:
             ("Ontario", "Batı ABD"),
             ("Ontario", "Doğu ABD"),
 
-            ("Quebec", "Doğu ABD"),
+            #("Quebec", "Doğu ABD"),
+            ("Quebec", "Büyük Britanya"),
 
             ("Batı ABD", "Doğu ABD"),
             ("Batı ABD", "Orta Amerika"),
@@ -129,7 +130,7 @@ class GameMap:
             ("Peru", "Arjantin"),
 
             ("Brezilya", "Arjantin"),
-            ("Brezilya", "Kuzey Afrika"),
+            ("Brezilya", "Güney Afrika"),
 
             # =========================
             # EUROPE
@@ -137,12 +138,12 @@ class GameMap:
             ("İzlanda", "Büyük Britanya"),
             ("İzlanda", "İskandinavya"),
 
-            ("Büyük Britanya", "İskandinavya"),
-            ("Büyük Britanya", "Kuzey Avrupa"),
+            #("Büyük Britanya", "İskandinavya"),
+            #("Büyük Britanya", "Kuzey Avrupa"),
             ("Büyük Britanya", "Batı Avrupa"),
 
             ("İskandinavya", "Kuzey Avrupa"),
-            ("İskandinavya", "Ukrayna"),
+            #("İskandinavya", "Ukrayna"),
 
             ("Kuzey Avrupa", "Batı Avrupa"),
             ("Kuzey Avrupa", "Güney Avrupa"),
@@ -156,7 +157,7 @@ class GameMap:
             ("Güney Avrupa", "Orta Dogu"),
             ("Güney Avrupa", "Ukrayna"),
 
-            ("Ukrayna", "Ural"),
+            #("Ukrayna", "Ural"),
             ("Ukrayna", "Afganistan"),
             ("Ukrayna", "Orta Dogu"),
 
@@ -164,11 +165,13 @@ class GameMap:
             # AFRICA
             # =========================
             ("Kuzey Afrika", "Mısır"),
-            ("Kuzey Afrika", "Doğu Afrika"),
+            #("Kuzey Afrika", "Doğu Afrika"),
             ("Kuzey Afrika", "Kongo"),
 
             ("Mısır", "Doğu Afrika"),
             ("Mısır", "Orta Dogu"),
+            ("Mısır", "Kongo"),
+
 
             ("Doğu Afrika", "Orta Dogu"),
             ("Doğu Afrika", "Kongo"),
@@ -177,34 +180,38 @@ class GameMap:
 
             ("Kongo", "Güney Afrika"),
 
-            ("Güney Afrika", "Madagaskar"),
+            #("Güney Afrika", "Madagaskar"),
 
             # =========================
             # ASIA
             # =========================
             ("Ural", "Sibirya"),
             ("Ural", "Afganistan"),
-            ("Ural", "Çin"),
+            #("Ural", "Çin"),
 
-            ("Sibirya", "Yakutsk"),
+            #("Sibirya", "Yakutsk"),
             ("Sibirya", "Irkutsk"),
-            ("Sibirya", "Çin"),
+            #("Sibirya", "Çin"),
 
             ("Yakutsk", "Irkutsk"),
             ("Yakutsk", "Kamçatka"),
 
-            ("Kamçatka", "Irkutsk"),
-            ("Kamçatka", "Moğolistan"),
+            #("Kamçatka", "Irkutsk"),
+            #("Kamçatka", "Moğolistan"),
             ("Kamçatka", "Japonya"),
 
-            ("Irkutsk", "Moğolistan"),
+            ("Irkutsk", "Japonya"),
 
-            ("Moğolistan", "Japonya"),
+            ("Moğolistan", "Ural"),
             ("Moğolistan", "Çin"),
+            ("Moğolistan", "Afganistan"),
+            ("Moğolistan", "Orta Dogu"),
+            ("Moğolistan", "Hindistan"),
+
 
             ("Afganistan", "Orta Dogu"),
-            ("Afganistan", "Hindistan"),
-            ("Afganistan", "Çin"),
+            #("Afganistan", "Hindistan"),
+            #("Afganistan", "Çin"),
 
             ("Orta Dogu", "Hindistan"),
 
@@ -212,14 +219,16 @@ class GameMap:
             ("Hindistan", "Siam"),
 
             ("Çin", "Siam"),
+            ("Çin","Japonya"),
 
             # =========================
             # AUSTRALIA / OCEANIA
             # =========================
             ("Siam", "Endonezya"),
+            ("Siam", "Yeni Gine"),
 
             ("Endonezya", "Yeni Gine"),
-            ("Endonezya", "Batı Avustralya"),
+            #("Endonezya", "Batı Avustralya"),
 
             ("Yeni Gine", "Batı Avustralya"),
             ("Yeni Gine", "Doğu Avustralya"),
