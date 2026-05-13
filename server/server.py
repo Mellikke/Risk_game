@@ -24,7 +24,17 @@ fortify_done = False
 game_over = False
 
 lock = threading.Lock()
+def reset_game():
+    global game, phase, fortify_done, game_over
 
+    game = GameEngine()
+    game.setup_game()
+
+    phase = "reinforcement"
+    fortify_done = False
+    game_over = False
+
+    print(">>> Oyun sıfırlandı. Yeni oyun hazır.")
 
 def send_to_client(client_socket, message):
     try:
@@ -479,11 +489,15 @@ def handle_client(client_socket, address):
                 send_to_client(client_socket, "SERVER_FULL")
                 client_socket.close()
                 return
+            # Eğer hiç aktif oyuncu yoksa yeni oyun başlatılıyor demektir.
+            # Bu yüzden harita ve oyun state sıfırlanır.
+            if len(clients) == 0:
+                reset_game()
+
             clients.append(client_socket)
 
             player_number = len(clients)
             player_role = f"Player {player_number}"
-
             players[client_socket] = {
                 "name": player_name,
                 "role": player_role
@@ -530,6 +544,8 @@ def handle_client(client_socket, address):
                 print(f"{players[client_socket]['name']} oyundan ayrıldı.")
                 del players[client_socket]
 
+            if len(clients) == 0:
+                reset_game()
         try:
             if file_reader:
                 file_reader.close()
