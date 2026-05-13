@@ -34,9 +34,29 @@ def send_to_client(client_socket, message):
 
 
 def broadcast(message):
-    for client in clients[:]:
-        send_to_client(client, message)
+    disconnected_clients = []
 
+    for client in clients[:]:
+        try:
+            client.sendall((message + "\n").encode("utf-8"))
+        except Exception:
+            disconnected_clients.append(client)
+
+    for client in disconnected_clients:
+        remove_client(client)
+
+def remove_client(client_socket):
+    if client_socket in clients:
+        clients.remove(client_socket)
+
+    if client_socket in players:
+        print(f"{players[client_socket]['name']} oyundan ayrıldı.")
+        del players[client_socket]
+
+    try:
+        client_socket.close()
+    except Exception:
+        pass
 
 def serialize_game_state():
     current_player = game.get_current_player()
@@ -459,7 +479,6 @@ def handle_client(client_socket, address):
                 send_to_client(client_socket, "SERVER_FULL")
                 client_socket.close()
                 return
-
             clients.append(client_socket)
 
             player_number = len(clients)
