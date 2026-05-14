@@ -201,6 +201,7 @@ class GameMap:
             ("Kamçatka", "Japonya"),
 
             ("Irkutsk", "Japonya"),
+            ("Irkutsk", "Çin"),
 
             ("Moğolistan", "Ural"),
             ("Moğolistan", "Çin"),
